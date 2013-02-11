@@ -17,6 +17,7 @@ print "assigning sessions created now!"
 SESSIONS_CREATED = 0
 
 class WebView(object):
+    """ Web interface controller. """
     def __init__(self, game):
         self.game = game
         self.log = []
@@ -48,6 +49,7 @@ class WebView(object):
         return text
 
 class Session():
+    """ Container for the DBSession and other objects. """
     def __init__(self, name):
         self.uid = str(uuid.uuid4().hex)
         dbsession = models.DBSession()

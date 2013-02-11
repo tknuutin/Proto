@@ -8,6 +8,7 @@ from django.db.models import Q
 from proto import models
 
 class Condition(object):
+    """ Game condition, basically an if-clause in the game script. """
     LARGER = 0
     SMALLER = 1
     LARGER_OR_EQUAL = 2
@@ -21,6 +22,7 @@ class Condition(object):
         self.number = number
         
     def has_visited(self):
+        """ Checks if the condition is a 'Location visited' type condition and if so, checks if the condition is true. """
         prefix = "HAS_VISITED_"
         if self.variable.startswith(prefix):
             locvisited = self.variable[:len(prefix)]
@@ -32,6 +34,7 @@ class Condition(object):
         return False
         
     def passes(self, game):
+        """ Checks whether condition passes. """
         if self.has_visited():
             return True
         elif game.has_variable(self.variable):
@@ -57,6 +60,7 @@ class Condition(object):
             return False
 
 class Event(object):
+    """ A generic game event. """
     MODE_NEW = 0
     MODE_ADD = 1
     MODE_SUBS = 2
@@ -73,6 +77,7 @@ class Event(object):
         self.failevent = failevent
         
     def has_triggered(self, sessionid):
+        """ Checks whether this Event has triggered for this game Session yet. """
         try:
             models.EventTriggered.objects.get(session__id=sessionid, event__id=self.dbid)
             return True
@@ -80,6 +85,7 @@ class Event(object):
             return False
         
     def trigger(self, game):
+        """ Trigger the effects of the Event to the Game object. """
         if self.has_triggered(game.sessionid):
             return True
         elif not self.condition or self.condition.passes(game):
@@ -102,6 +108,7 @@ class Event(object):
             return False
 
 class Feature(object):
+    """ An object, item, or other attribute of a location or Feature. """
     def __init__(self, name):
         self.name = name
         self.events = []
@@ -115,6 +122,7 @@ class Feature(object):
         return self
     
     def trigger(self, game, show_description=True):
+        """ Trigger the effects of the feature. """
         if show_description:
             game.send_text(self.description)
         
@@ -126,6 +134,7 @@ class Feature(object):
             self.events.remove(event)
 
 class Location(Feature):
+    """ A location in game. """
     def __init__(self, name, dbid):
         Feature.__init__(self, name)
         self.features = {}
@@ -146,6 +155,7 @@ class Location(Feature):
         return self
         
     def trigger_location(self, game):
+        """ Trigger location, for example when entering the area or loading game to area. """
         game.send_text("You are in " + self.name.upper() + ".")
         
         try:
@@ -163,6 +173,7 @@ class Location(Feature):
             game.send_text("You can go to %s or %s." % (", ".join(connectionnames[:(len(connectionnames)-1)]), connectionnames[-1]))
 
 class DBInterface(object):
+    """ Database interface controller. """
     def get_condition(self, uid=None, dbobject=None):
         dbcondition = dbobject or models.DBCondition.objects.get(id=uid)
         return Condition(dbcondition.variable, dbcondition.mode, other=dbcondition.other, number=dbcondition.number)
@@ -205,6 +216,7 @@ class DBInterface(object):
         return loc
         
 class Game(object):
+    """ """
     def __init__(self, name, sessionid):
         self.playername = name
         self.sessionid = sessionid
@@ -224,6 +236,7 @@ class Game(object):
         return self.pop_buffer()
     
     def pop_buffer(self):
+        #TODO: remove debug print
         print "current variables: " + str(self.variables)
         returnable = self.text_buffer
         self.text_buffer = []   
@@ -279,6 +292,7 @@ class Game(object):
             self.variables[variable]["value"] = self.variables[variable] * amount
 
 class ConsoleView(object):
+    """ Debug view for console interface. """
     def __init__(self, game):
         self.game = game
     def send_command(self, command):

@@ -14,6 +14,7 @@ from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfil
 from django.shortcuts import render_to_response, redirect
 
 class NullModule(object):
+    """ A dummy module for forms which describe a new module. """
     def __init__(self):
         self.name = ""
         self.desc = ""
@@ -22,6 +23,7 @@ class NullModule(object):
         self.adminname = ""
         
 def get_empty_names(fields):
+    """ Get the names of all the fields that have empty string values or None values. """
     empties = []
     for key, value in fields.iteritems():
         if value == None or value == "":
@@ -29,9 +31,12 @@ def get_empty_names(fields):
     return ", ".join(empties)
 
 def editor_error(request, template, message):
+    """ Display editor error. """
     return render_to_response(template, createTemplateData({"location": NullModule(), "message" : message}), context_instance=RequestContext(request))
 
+@login_required
 def location_save(request):
+    """ Save location View. """
     editorname = request.POST.get('editorname', None)
     name = request.POST.get('name', None)
     ftdesc = request.POST.get('ftdesc', None) or None
@@ -54,6 +59,7 @@ def location_save(request):
 
 @login_required  
 def location(request, id=None, message=None):
+    """ Editor Location form. """
     if request.POST:
         return location_save(request)
     if id:
@@ -69,6 +75,7 @@ def location(request, id=None, message=None):
 
 @login_required
 def editor_main(request):
+    """ Editor main view. """
     locations = DBLocation.objects.filter(creator=request.user)
     events = DBEvent.objects.filter(creator=request.user)
     features = DBFeature.objects.filter(creator=request.user)

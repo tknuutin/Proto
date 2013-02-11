@@ -14,6 +14,8 @@ def validate_email(email):
     except ValidationError:
         return False
 
+#Bunch of old convenience functions here!
+
 def replaceBadToken(string):
     return string.replace("]]>", "BAD TOKEN")
 

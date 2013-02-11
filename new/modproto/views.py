@@ -17,6 +17,7 @@ from proto.models import UserProfile
 from django.contrib.auth.models import User
 
 def createTemplateData(add=None):
+    """ Convenience function, this kinda sucks, refactor """
     BASIC_INFO = {"modme_version" : PROTO_VERSION, "STATIC_URL" : "/static/"}
     if add is not None:
         BASIC_INFO.update(add)
