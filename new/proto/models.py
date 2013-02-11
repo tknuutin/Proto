@@ -27,8 +27,9 @@ PLAY_STATUS_CHOICES = (
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    disabled = models.BooleanField(default=False, blank=True)
     premium = models.BooleanField(default=False, blank=False)
+    disabled = models.BooleanField(default=False, blank=False)
+    filtermode = models.IntegerField(default=0, blank=False)
     explorer_score = models.IntegerField(default=0, blank=False)
     designer_score = models.IntegerField(default=0, blank=False)
     
@@ -64,6 +65,9 @@ class DBGameModule(models.Model):
                 and user.id == self.creator.id)) \
         and not self.hidden \
         or user.is_superuser:
+            print user.is_superuser
+            print self.design_status
+            print self.creator.id, user.id
             return True
         else:
             return False
@@ -139,6 +143,9 @@ class DBLocation(DBGameModule):
     name = models.CharField(max_length=512)
     desc = models.TextField()
     ftdesc = models.TextField(null=True, blank=True)
+    
+    def get_absolute_url(self):
+        return "/proto/editor/location/" + str(self.id)
     
     def __unicode__(self):
         return self.name
