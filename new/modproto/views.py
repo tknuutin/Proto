@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from utilities import wrapTags, wrapTagsWithInnerData, validate_email
 from django.contrib.auth.decorators import login_required
 import sessions
+from proto.models import UserProfile
 from django.contrib.auth.models import User
 
 def createTemplateData(add=None):
@@ -20,6 +21,18 @@ def createTemplateData(add=None):
     if add is not None:
         BASIC_INFO.update(add)
     return BASIC_INFO
+
+@login_required
+def settings(request):
+    profile = UserProfile.objects.get(user=request.user)
+    if request.POST:
+        filtermode = request.POST.get('filter', None)
+        print filtermode
+        profile.filtermode = 0 if filtermode == "verified" else 1
+        profile.save()
+        return render_to_response("settings.html", createTemplateData({"message" : "Settings saved.", "filter" : profile.filtermode}), context_instance=RequestContext(request))
+    return render_to_response("settings.html", createTemplateData({"filter" : profile.filtermode}), context_instance=RequestContext(request))
+            
 
 def login_user(request):
     username = password = ''
@@ -60,6 +73,8 @@ def register(request):
                 except User.DoesNotExist:
                     newuser = User.objects.create_user(username, email, pass1)
                     newuser.save()
+                    newprofile = UserProfile(user=newuser)
+                    newprofile.save()
                     return render_to_response("login.html", createTemplateData(add={"message" : "User account created succesfully!"}), context_instance=RequestContext(request))
                 
     return render_to_response("register.html", createTemplateData(), context_instance=RequestContext(request))
