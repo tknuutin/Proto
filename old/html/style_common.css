@@ -1,0 +1,152 @@
+		body {background-color:#C1CFDE;}
+		p {font-family:"Lucida Console";}
+		
+		div.d_element{
+			padding-top:10px;
+			margin-left:auto;
+			margin-right:auto;
+			width:800px;
+		}
+		div.gamebox{
+			margin-left:auto;
+			margin-right:auto;
+			width:1130px;
+			background-color:#AAAAAF;
+		}
+		div#game{
+			margin-top:30px;
+			margin-bottom:40px;
+		}
+		div.centered{
+			margin-left:auto;
+			margin-right:auto;
+			width:820px;
+			background-color:#F2F2F2;
+		}
+		
+		div.news_container{
+			margin-left:auto;
+			margin-right:auto;
+			padding-top:10px;
+			padding-bottom:20px;
+			width:820px;
+			background-color:#F2F2F2
+		}
+		.news_element{
+			padding-top:10px;
+			margin-left:auto;
+			margin-right:auto;
+			width:800px;
+		}
+		p.bottom{
+			padding-top:5px;
+			padding-bottom:5px;
+			text-align:center;
+			font-family: "Times New Roman";
+			font-size:10px;
+			color:#878787;
+		}
+		p.news_info{
+			font-size:10px;
+			font-family: "Times New Roman";
+		}
+		p.news_text{
+			font-family: "Times New Roman";
+		}
+		h2#news_heading{
+			text-align:center;
+			padding-left:10px;
+		}
+		div#about{
+			margin-left:auto;
+			margin-right:auto;
+			width:780px;
+		}
+		div#topbanner{
+			margin-left:auto;
+			margin-right:auto;
+			width:820px;
+			background-color:#C1CFDE;
+			height:50px;
+			padding-top:0px;
+			padding-left:10px;
+			padding-right:10px;
+			margin-bottom:30px;
+		}
+		p#banner{
+			font-family: "Times New Roman";
+			font-size:36px;
+			margin-top:15px;
+			margin-bottom:10px;
+			float:left;
+		}
+		div#toplogin{
+			margin-top:20px;
+			float:right;
+			background-color:#C1CFDE;
+			padding-top:8px;
+		}
+		h1{
+			margin-top:10px;
+			margin-bottom:10px;
+			font-size:30pt;
+			padding-top:5px;
+		}
+		p#navlinks{
+			margin:5px;
+		}
+		p.info{
+			font-family: "Times New Roman";
+		}
+		a.header:link{ color:#000000; text-decoration:none; }
+		a.header:visited{ color:#000000; text-decoration:none; }
+		a.header:hover{ color:#000000; text-decoration:none; }
+		a.navlink:active{ color:#000000; text-decoration:none; }
+		a.navlink:link{ color:#000000; text-decoration:none; }
+		a.navlink:visited{ color:#000000; text-decoration:none; }
+		a.navlink:hover{ color:#000000; text-decoration:underline; }
+		a.navlink:active{ color:#888888; text-decoration:none; }
+		a.navlink_current:link{ color:#A30000; text-decoration:none; }
+		a.navlink_current:visited{ color:#A30000; text-decoration:none; }
+		a.navlink_current:hover{ color:#000000; text-decoration:underline; }
+		a.navlink_current:active{ color:#888888; text-decoration:none; }
+		
+		input#toplogin_name_input{
+			width: 80px;
+		}
+		input#toplogin_pass_input{
+			width: 80px;
+		}
+		p.smallinfo{
+			margin:1px;
+			font-family: "Times New Roman";
+		}
+		
+		
+		
+		div#navigation{
+			margin-top:20px;
+			margin-left:auto;
+			margin-right:auto;
+			margin-bottom:0px;
+			position:relative;
+			width:820px;
+			background-color:#F2F2F2;
+			height:40px;
+			text-align:center;
+			line-height:40px;
+		}
+		div.login{
+			padding-top:50px;
+			margin-left:auto;
+			margin-right:auto;
+			margin-bottom:10px;
+			text-align:center;
+		}
+		div#content{
+			margin-top:20px;
+			background-color:#F2F2F2;
+			padding-top:10px;
+			padding-bottom:30px;
+			margin-bottom:30px;
+		}

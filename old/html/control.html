@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}CONTROL - Modme {{ modme_version }}{% endblock %}
+
+{% block content %}
+<div class="centered" id="content">
+	<div class="d_element">
+		<p class="info">Welcome to the admin tools. Here you can do all sorts of funky shit. <a href="server_info.html">Server status</a></p>
+	</div>
+	<div class="d_element">
+		<p class="info">View status of site features and turn them on or off.</p>
+		<p class="info"><table>
+			<tr>
+				<td><input id="site_play_enable" type="button" value="Enable gameplay"/></td>
+				<td><input type="button" id="site_play_disable" value="Disable gameplay"/></td>
+				<td>Enable or disable gameplay. Superusers can always play.</td>
+			</tr>
+			<tr>
+				<td><input id="site_unver_enable" type="button" value="Enable unverified"/></td>
+				<td><input type="button" id="site_unver_disable" value="Disable unverified"/></td>
+				<td>Enable or disable unverified play.</td>
+			</tr>
+				<td><input id="site_designer_enable" type="button" value="Enable designer"/></td>
+				<td><input type="button" id="site_designer_disable" value="Disable designer"/></td>
+				<td>Enable or disable the designer. Superusers can always design.</td>
+			</tr>
+			<tr>
+				<td><input id="site_publish_enable" type="button" value="Enable publishing"/></td>
+				<td><input type="button" id="site_publish_disable" value="Disable publishing"/></td>
+				<td>Enable or disable publishing. Superusers can always publish.</td>
+			</tr>
+			<tr>
+				<td><input id="site_register_enable" type="button" value="Enable registering"/></td>
+				<td><input type="button" id="site_register_disable" value="Disable registering"/></td>
+				<td>Enable or disable registering new users.</td>
+			</tr>
+		</table></p>
+		<br/>
+		<input id="site_status_refresh" type="button" value="Refresh"/>
+	</div>
+</div>
+{% endblock %}
+
+{% block jsstatement %}<script type="text/javascript" src="{{ STATIC_URL }}code_control.js"></script>{% endblock %}

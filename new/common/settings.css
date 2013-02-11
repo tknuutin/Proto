@@ -1,0 +1,20 @@
+#container input[type="submit"]{
+    border:1px solid green;
+}
+#container input[type="submit"]:hover{
+    border:1px solid green;
+    background-color:#005701;
+}
+.radiobutton{
+    width:110px;
+    padding-left:20px;
+}
+.radiobutton.selected{
+    background-image: url('/static/greenblock.png');
+    background-repeat: no-repeat;
+    background-position: 0px 3px;
+    background-size:10px 15px;
+}
+.radiobutton:hover{
+    background-color:#005701;
+}

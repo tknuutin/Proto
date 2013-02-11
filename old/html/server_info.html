@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Modme server info</title>
+</head>
+<body>
+	<p>Server timestamp: {{ timestamp }}</p>
+	<p>Uptime: {{ uptime }}</p>
+	<br/>
+	<p>Current active sessions: {{ num_sessions }}</p>
+	<p>Sessions created since server start: {{ num_sessions_total }}</p>
+	<br/>
+	<p>Gamemodules in database: {{ num_gamemodules }}</p>
+	<p>New gamemodules since server start: {{ num_new_gamemodules }}</p>
+	<p>Users in database: {{ num_users }}</p>
+	<br/>
+	<p>Logged server errors since server start: {{ num_errors }}</p>
+	<p>Last server error time: {{ last_error_time }}</p>
+	<br/>
+	<p>Gameplay is enabled: {{ play }}</p>
+	<p>Unverified gameplay is enabled: {{ unver }}</p>
+	<p>Designer is enabled: {{ designer }}</p>
+	<p>Publishing is enabled: {{ publish }}</p>
+	<p>Registering new users is enabled: {{ register }}</p>
+  </body>
+</html>

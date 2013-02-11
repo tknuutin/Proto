@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/editor_main.css" />
+{% endblock %}
+{% block content %}
+            <li id="nav_game" class="selected"><a href="/proto/">Game</a></li>
+            <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
+        </ul>
+    </div>
+    <div id="container">
+        {% if user.is_authenticated %}
+            <p>Logged in succesfully as {{ user.username }}.</p>
+        {% else %}
+            <div class="login_big">
+                <p class="smallinfo">{{ message }} Please log in or <a href="register.html">register</a>.</p>
+                <form action="login.html" method="post">{% csrf_token %}<input class="toplogin" type="text" name="username" id="toplogin_name_input" value="" placeholder="Username" autocomplete="off"/>
+                <input class="toplogin" name="password" type="password" id="toplogin_pass_input" value="" placeholder="Password" autocomplete="off"/>
+                <input class="toplogin" type="submit" value="Enter" id="toplogin_submit"/>
+            </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

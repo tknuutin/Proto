@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Modme {{ modme_version }} - About{% endblock %}
+
+{% block content %}
+<div class="centered" id="content">
+	<div id="about">
+		<p class="info"><h2>What is Modme?</h2>Modme is a text adventure game in which you interact in simple natural language commands. These commands can be specific to the area you're visiting, make use of an item, examine game objects, or use player abilities. Some commands are listed in the info screen, some are combinations of verbs and targets known to the player, and some are completely hidden and are up to the player to discover.</p>
+		<p class="info">The player possesses stats, skills, traits, and items. He may encounter many friendly creatures or angry monsters. He will also encounter items scattered around the game world. The game world can be silly, unpredictable, or even non-sensical with how the game world reacts to actions by the player.</p>
+		<p class="info">Modme is designed to be completely modular. All game areas and entities can be added with a simple form and are added to  the database. It takes only a few minutes to create a simple area, but more complex scripts and events are also possible. Anyone can design a new area and it will be playable by everyone immediately in the Unverified version. It is possible for example to add new commands to areas created by others, or new outcomes to commands created by others, or new NPCs, or new random events. You can create an entire story or adventure game completely within Modme.</p>
+		<p class="info">Interact in the game by entering commands to the commandline with the >-symbol. Click on items in the info screen for a shortcut. You can also use a limited form of tab-completion in the command-line to save you some typing.</p>
+		<p class="info">Saving and loading the game requires you to be registered. Game log is also available to download for every game session.</p>
+		<p class="info">Modme was developed by Tarmo Knuutinen with Python, Django, and Javascript. You can contact me at: admin at modme-game.net.</p>
+		<p class="info"><h2>Tips</h2><h3>Examine</h3>Examine the current area with the command examine room. Lots of other things are examinable, for example player attributes, items, and NPCs. Examine them by typing the command examine [thing]. You will receive a short description.</p>
+		<p class="info"><h3>Equip</h3>Some items are equippable and you can use the command <i>equip [item]</i>. If the item is a weapon, it will replace your current equipped weapon. You can then use the weapon with the command <i>attack</i>. Other items may also be equippable as clothes or other wearable items. Unequip an equipped item with the command <i>unequip [item]</i>.</p>
+		<p class="info"><h3>Eat</h3>Some items are consumable. They will usually regenerate your health, but may also have other effects. Format is <i>eat [thing]</i> or <i>consume [thing]</i>.</p>
+		<p class="info"><h3>Attack</h3>You can attack game NPCs with several verb with the command <i>[verb] [target]</i>. The command <i>attack</i> will use your current equipped weapon. You also have some other verbs available to you at start: <i>bite, kick</i>, and <i>punch</i>. Weapons will have a verb associated with them. You can also specify a weapon to attack with with the command <i>[verb] [target] with [weapon]</i></p>
+		<p class="info"><h3>Take</h3>You can take items in the game world to your inventory with this command. Format is <i>take [item]</i>.</p>
+	</div>
+</div>
+{% endblock %}
+

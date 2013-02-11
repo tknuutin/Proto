@@ -1,0 +1,37 @@
+
+#navigation a{
+    color:silver;
+    text-decoration:none;
+}
+#navigation li.selected{
+    background-image: url('greyblock.png');
+}
+#navigation li:hover{
+    background-color: #D1D1D1;
+}
+#container{
+    border: 0px solid #D1D1D1;
+}
+td{
+    padding-left:5px;
+    padding-right:5px;
+}
+h2{
+    margin-top:20px;
+    margin-bottom:5px;
+}
+.error{
+    color:red;
+}
+input{
+    border:1px solid silver;
+}
+input[type="submit"]:hover{
+    background-color:#C7C7C7;
+}
+input[type="text"]{
+    margin-left:5px;
+}
+textarea{
+    display:block;
+}

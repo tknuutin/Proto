@@ -1,0 +1,35 @@
+
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/proto_main.css" />
+<link rel="stylesheet" type="text/css" href="/static/settings.css" />
+{% endblock %}
+{% block content %}
+            <li id="nav_game" ><a href="/proto/">Game</a></li>
+            <li id="nav_settings" class="selected"><a href="settings.html">Settings</a></li>
+            <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
+        </ul>
+    </div>
+    <div id="container">
+        {% if message %}<p class="error">{{ message }}</p>{% endif %}
+        <form action="settings.html" method="post">{% csrf_token %}
+            <p>Limit game content to:
+                <div class="radiobutton{% if filter == 0 %} selected{% endif %}">
+                    <input style="display:none;" type="radio" name="filter" value="verified" {% if filter == 0 %} checked="checked"{% endif %}>Verified
+                </div>
+                <div class="radiobutton{% if filter == 1 %} selected{% endif %}">
+                    <input style="display:none;" type="radio" name="filter" value="unverified" {% if filter == 1 %} checked="checked"{% endif %}>Unverified
+                </div>
+            </p>
+            <p>Verified content is checked by some sort of governing entity before it is stamped as verified. Unverified content is pure unfiltered user submissions, so it will probably be buggy, disturbing, and possibly traumatizing!</p>
+            <p><input type="submit" value="Save settings"/></p>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/proto_main.js"></script>
+<script type="text/javascript" src="/static/settings.js"></script>
+{% endblock %}

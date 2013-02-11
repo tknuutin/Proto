@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /design.html
+Disallow: /login.html
+Disallow: /design/
+Disallow: /admin/

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Sat Jul 02 23:31:10 EEST 2011 -->
+
+<area xsi:noNamespaceSchemaLocation="..\areaschema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>Bedroom</name>
+	<uniqueid>1</uniqueid>
+	<dependency_list><dependency>base/area_kitchen.xml</dependency></dependency_list>
+	<location>
+		<root>Apartment building</root>
+		<loc>Stairs</loc>
+		<loc>Home</loc>
+		<loc>Bedroom</loc>
+	</location>
+	<area_description>
+		<first_time>
+			<p><line>You suddenly realize you are in your bedroom. With the curtains drawn it is quite dark, so it is hard to get an accurate view of your surroundings. With effort you recall that it is Tuesday, and you need to buy milk.</line></p>
+			<p><line>You have no idea where the President is.</line></p>
+			<p><line>What do you do?</line></p>
+		</first_time>
+		<default>
+			<single_line>Your bedroom looks pretty much as you left it. Messy, cramped, and barely furnished.</single_line>
+		</default>
+	</area_description>
+	<movecommand>
+		<name>go to the kitchen</name>
+		<alias>kitchen</alias>
+		<type>move</type>
+		<req_ref>mustsee</req_ref>
+		<req_ref>notFirst</req_ref>
+		<outcome>
+			<name>first</name>
+			<requirement>
+				<req_name>mustsee</req_name>
+				<exists>
+					<status>
+						<status_name>lightsOn</status_name>
+					</status>
+				</exists>
+			</requirement>
+			<description>
+				<single_line>Brilliant as ever, you deduct that moving to the kitchen is the best course of action.</single_line>
+			</description>
+			<time>5</time>
+			<move_to_area>base/area_kitchen.xml</move_to_area>
+		</outcome>
+		<outcome>
+			<name>def</name>
+			<requirement>
+				<req_name>notFirst</req_name>
+				<visited>
+					<exact></exact>
+					<root>Apartment building</root>
+					<loc>Stairs</loc>
+					<loc>Home</loc>
+					<loc>Bedroom</loc>
+				</visited>
+			</requirement>
+			<time>5</time>
+			<move_to_area>base/area_kitchen.xml</move_to_area>
+		</outcome>
+	</movecommand>
+	<command>
+		<name>open curtains</name>
+		<singular></singular>
+		<type>interact</type>
+		<req_ref>mustnotsee</req_ref>
+		<outcome>
+			<name>open curtains</name>
+			<requirement>
+				<req_name>mustnotsee</req_name>
+				<not_visited>
+					<exact></exact>
+					<root>Apartment building</root>
+					<loc>Stairs</loc>
+					<loc>Home</loc>
+					<loc>Bedroom</loc>
+				</not_visited>
+				<not_exists>
+					<status>
+						<status_name>lightsOn</status_name>
+					</status>
+				</not_exists>
+			</requirement>
+			<description>
+				<p>
+					<line>A blinding fiendish light stings your eyes! You take a moment to recover.</line>
+					<new><trait><trait_name>Eyedamaged</trait_name></trait></new>
+					<take_damage>
+						<amount>1</amount>
+						<reason>Blinding light</reason>
+						<type>impact</type>
+						<type>blunt</type>
+					</take_damage>
+				</p>
+				<p>
+<line>You can now see the room is small,  and the only furnishings are a bed,
+ a table with a computer on it, a desk lamp sitting on the floor, and a poster of the Michael Bay movie Transformers 2. There is a door to the kitchen opposite the window.</line>
+</p>
+			</description>
+			<time>5</time>
+			<new>
+				<status>
+					<status_name>lightsOn</status_name>
+					<local>true</local>
+					<visible>false</visible>
+				</status>
+			</new>
+		</outcome>
+	</command>
+	<command>
+		<name>look outside</name>
+		<alias>look</alias>
+		<singular></singular>
+		<type>peep</type>
+		<req_ref>sporecom</req_ref>
+		<outcome>
+			<name>def</name>
+			<requirement>
+				<req_name>sporecom</req_name>
+				<exists><status><status_name>spore_communication</status_name><range>2 2</range></status></exists>
+			</requirement>
+			<description>
+				<p><line>The view outside is grey and boring. Apartment buildings, parking lots, barren trees, puddles of murky water. You are in the fourth floor.</line></p>
+				<p><line>You look around for what the spore hallucinations might've been talking about. All the windows of the opposite apartment buildings are dark, except for one. You have a direct line of sight to some guy's dirty bathroom since he left the door open, but other than that there's nothing interesting.</line>
+				</p>
+			</description>
+			<time>60</time>
+			<modify><status><status_name>spore_communication</status_name><add>1</add></status></modify>
+		</outcome>
+	</command>
+	<command>
+		<name>commit suicide</name>
+		<type>die</type>
+		<list_requirement>
+			<req_name>asd</req_name>
+			<never></never>
+		</list_requirement>
+		<outcome>
+			<name>def</name>
+			<requirement>
+				<req_name>notEnoughSuicideTries</req_name>
+				<not_exists>
+					<status><status_name>suicideTries</status_name><range>5 100</range></status>
+				</not_exists>
+			</requirement>
+			<description><single_line>You briefly consider if you should commit suicide, but quickly abandon the notion as foolish.</single_line></description>
+			<time>1</time>
+			<modify>
+				<status><status_name>suicideTries</status_name><add>1</add><fallback>1</fallback></status>
+			</modify>
+		</outcome>
+		<outcome>
+			<name>killSelf</name>
+			<requirement>
+				<req_name>enoughSuicideTries</req_name>
+				<exists>
+					<status><status_name>suicideTries</status_name><range>5 100</range></status>
+				</exists>
+			</requirement>
+			<description><single_line>You kill yourself.</single_line></description>
+			<time>10</time>
+			<take_damage><percentage>100</percentage><reason>Your depression</reason></take_damage>
+			<modify>
+				<status><status_name>suicideTries</status_name><new_value>0</new_value><fallback>1</fallback></status>
+			</modify>
+		</outcome>
+	</command>
+	<command>
+		<name>examine room</name>
+		<singular></singular>
+		<type>other</type>
+		<list_requirement>
+			<req_name>asd</req_name>
+			<never></never>
+		</list_requirement>
+		<outcome>
+			<name>def</name>
+			<description>
+				<single_line>You cannot believe thine eyes, for there are no less than three TUBES OF WHIPPED CREAM on the floor. Jegus christ.</single_line>
+			</description>
+			<time>1</time>
+		</outcome>
+	</command>
+	<command>
+		<name>turn on lights</name>
+		<singular></singular>
+		<type>interact</type>
+		<req_ref>
+mustnotsee</req_ref>
+		<outcome>
+			<name>turn on lights</name>
+			<requirement>
+				<req_name>mustnotsee</req_name>
+				<not_visited>
+					<exact></exact>
+					<root>Apartment building</root>
+					<loc>Stairs</loc>
+					<loc>Home</loc>
+					<loc>Bedroom</loc>
+				</not_visited>
+				<not_exists>
+					<status>
+						<status_name>lightsOn</status_name>
+					</status>
+				</not_exists>
+			</requirement>
+			<description>
+				<p>
+					<line>You stumble blindly into the lightswitch, miraculously avoiding stubbing your toe.
+ You can now see the room is small,  and the only furnishings are a bed, a table with a computer on it, a desk lamp sitting on the floor, and a poster of the Michael Bay movie Transformers 2. There is a door to the kitchen opposite the window.
+</line>
+				</p>
+			
+</description>
+			
+<time>5</time>
+			<new>
+				<status>
+					<status_name>lightsOn</status_name>
+					<local>true</local>
+					<visible>false</visible>
+				</status>
+			</new>
+		</outcome>
+	</command>
+	<command>
+		<name>squak like an imbecile and shit on your desk</name>
+		<alias>shit on your desk</alias>
+		<singular></singular>
+		<type>be awesome</type>
+		<list_requirement>
+			<req_name>mustFind</req_name>
+			<failure_notice><single_line>No.</single_line></failure_notice>
+			<never>
+			</never>
+		</list_requirement>
+		<outcome>
+			<name>text</name>
+			<description><single_line>You shit on your desk.. Well done.</single_line></description>
+			<time>30</time>
+		</outcome>
+	</command>
+	<entities>
+		<item>
+			<spawn_name>whippedCream</spawn_name>
+			<item_node>
+				<item_name>Tube of whipped cream</item_name>
+				<consumable>
+					<health_healed>5</health_healed>
+				</consumable>
+				<condition visible="true">
+					<cond_name>fullness</cond_name>
+					<value>50</value>
+				</condition>
+			</item_node>
+		
+			<amount>3</amount>
+		
+			<position>floor</position>
+		</item>
+	</entities>
+</area>

@@ -1,0 +1,310 @@
+{% extends "design_module_base.html" %}
+{% block css_file %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_common.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_design.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_design_area.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+{% endblock %}
+{% block gamemodule_unique %}
+	<div class="d_content_top">
+		<h2 class="d_page_title">{{ d_title_prefix }} <span id="module_type">area</span></h2>
+		<div class="d_element_top">
+			<span class="hidden" id="module_id">{{ area.id }}</span>
+			<p class="design_help"><input type="text" id="area_name" name="area" placeholder="Name" autocomplete="off"/>
+			Name of the area. <i>(Kitchen, Bathroom, Street name...)</i></p>
+		</div>
+		<div class="info_box">
+			<p class="design_help">Author: <span id="module_author"><a href="../user/{{ area.creator.id }}">{{ area.creator.username }}</a></span></p>
+			<p class="design_help">Status: {{ area.get_design_status }}, {{ area.get_play_status }}</p>
+			<div class="design_buttons_top"><input type="button" value="Save"/><input type="button" value="Publish"/><input type="button" value="Delete"/></div>
+		</div>
+	</div>
+	<span class="minimizable">
+	<div class="minimizable" id="basic_info">
+		<p class="minimizable_name">Basic info</p>
+		<div class="d_element">
+			<p class="design_help"><input type="text" id="area_location" name="area" placeholder="Location" autocomplete="off" value="{{ area_location }}"/><br/>
+			Location of the area as a path separated by a colon. Unique. <i>(ex. Streetname &#58; Cafe &#58; Kitchen)</i></p><br/>
+			<p class="design_help"><input type="checkbox" id="area_fasttravel" name="area" {% if area_fast_travel %}checked="checked"{% endif %}/>
+			Area is fast travellable?</p>
+		</div>
+	</div>
+	<div class="minimizable" id="ft_minimizable">
+		<p class="minimizable_name">First time description</p>
+		<div class="d_element" id="first_time">
+			<input type="radio" class="desc_type" name="ft_desc_type" value="sim"/>Simple first time description <input type="radio" name="ft_desc_type" value="com"/>Complex first time description <input type="radio" name="ft_desc_type" value="non"/>No first time description
+			<hr class="limitsize"/>
+			<span id="choice_ft_simple" class="desc_simple">
+				<p class="design_help">Simple description when entering the area for the first time. Optional. Be descriptive and informative!</p>
+				<div class="d_centered">
+					<textarea class="sub_paragraph" id="area_firsttime" name="area" placeholder="First time description"></textarea>
+				</div>
+			</span>
+			<span id="choice_ft_complex" class="desc_complex">
+				<p class="design_help">Complex description when entering the area for the first time. May include several paragraphs and events. Optional. Be descriptive and informative!</p>
+				<div class="d_centered">
+					<table class="module outermost">
+						<tr style="display:none"><td></td></tr>
+					</table>
+					<div class="add_elements">
+						<input type="button" value="Add paragraph"/ id="first_time_add_par">
+						<input type="button" value="Add player attribute event" id="first_time_add_attr"/>
+						<input type="button" value="Add damage/heal event" id="first_time_add_dmg"/>
+					</div>
+				</div>
+			</span>
+		</div>
+	</div>
+	<div class="minimizable" id="def_minimizable">
+		<p class="minimizable_name">Default description</p>
+		<div class="d_element" id="default">
+			<input type="radio" class="desc_type" name="def_desc_type" value="sim"/>Simple default description <input type="radio" name="def_desc_type" value="com"/>Complex default description
+			<hr class="limitsize"/>
+			<span id="choice_def_simple" class="desc_simple">
+				<p class="design_help">Simple default description when entering the area.</p>
+				<div class="d_centered">
+					<textarea class="sub_paragraph" id="area_firsttime" name="area" placeholder="Default description"></textarea>
+				</div>
+			</span>
+			<span id="choice_def_complex" class="desc_complex">
+				<p class="design_help">Complex default description when entering the area. May include several paragraphs and events.</p>
+				<div class="d_centered">
+					<table class="module outermost">
+						<tr style="display:none"><td></td></tr>
+					</table>
+					<div class="add_elements">
+						<input type="button" value="Add paragraph"/ id="default_add_par">
+						<input type="button" value="Add player attribute event" id="default_add_attr"/>
+						<input type="button" value="Add damage/heal event" id="default_add_dmg"/>
+					</div>
+				</div>
+			</span>
+		</div>
+	</div>
+	<div class="minimizable" id="commands_minimizable">
+		<p class="minimizable_name">Commands</p>
+		<div class="d_element" id="commands">
+			<p class="design_help">Commands available in the area. May be listed to the player or hidden. May have requirements that need to be filled. May have several possible outcomes. May be usable only once (singular).</p>
+			<div class="d_centered">
+				<table class="sub_module">
+					<th>Command name</th><th>Outcomes</th><th>Singular</th><th>Move command</th><th>Status</th><th>Author</th><th>Added by</th><th></th>
+				</table><br/>
+				<span class="no_elements"><p class="design_help"><i>No commands for this Area yet. You must add one move command to enable publishing.</i></p></span>
+				<a class="bc_link attach_this" href="/design/new/command">Add command</a> - <a href="www.google.com">Add command sequence</a>
+			</div>
+		</div>
+	</div>
+	<div class="minimizable" id="features_minimizable">
+		<p class="minimizable_name">Area features</p>
+		<div class="d_element" id="features">
+			<p class="design_help">Features in the area. Not items that can be picked up but may be examined. <i>(Table, computer...)</i> See more info in the tutorials.</p>
+			<div class="d_centered">
+				<table class="module">
+					<tr style="display:none"><td></td></tr>
+				</table>
+				<span class="no_elements"><p class="design_help"><i>No features for this Area yet.</i></p></span>
+				<input type="button" id="area_add_feature" value="Add feature"/>
+			</div>
+		</div>
+	</div>
+	<div class="minimizable" id="items_minimizable">
+		<p class="minimizable_name">Item spawns</p>
+		<div class="d_element" id="items">
+			<p class="design_help">Items present in the area. May be usually picked up and have complex features. May have requirements for spawning in the area. Multiple requirements will be treated as OR.</p>
+			<div class="d_centered">
+				<table class="module">
+					<tr style="display:none;"><td></td></tr>
+				</table>
+				<span class="no_elements"><p class="design_help"><i>No items for this Area yet.</i></p></span>
+				<a href="www.google.com">Add new item</a> - <a href="www.google.com">Select item</a> - <a href="www.google.com">Add randomized item</a>
+			</div>
+		</div>
+	</div>
+	<div class="minimizable" id="npcs_minimizable">
+		<p class="minimizable_name">NPC spawns</p>
+		<div class="d_element" id="npcs">
+			<p class="design_help">NPCs present in the area. May be friendly or nonfriendly. May have requirements for spawning in the area. Multiple requirements will be treated as OR.</p>
+			<div class="d_centered">
+				<table class="module">
+					<tr style="display:none;"><td></td></tr>
+				</table>
+				<span class="no_elements"><p class="design_help"><i>No NPCs for this Area yet.</i></p></span>
+				<a href="www.google.com">Add new NPC</a> - <a href="www.google.com">Select NPC</a> - <a href="www.google.com">Add randomized NPC</a>
+			</div>
+		</div>
+	</div>
+	<div class="minimizable" id="enter_events_minimizable">
+		<p class="minimizable_name">Enter events</p>
+		<div class="d_element" id="enter_events">
+			<p class="design_help">Events launched when entering the area. May have requirements. May have several outcomes. May be singular.</p>
+			<div class="d_centered" id="enter_events">
+				<table class="sub_module">
+					<th>Event name</th><th>Limit entering from?</th><th>Outcomes</th><th>Author</th><th>Added by</th><th></th>
+				</table><br/>
+				<span class="no_elements"><p class="design_help"><i>No enter events for this Area yet.</i></p></span>
+				<a href="www.google.com">Add new enter event</a> - <a href="www.google.com">Select enter event</a>
+			</div>
+		</div>
+	</div>
+	<div class="minimizable" id="exit_events_minimizable">
+		<p class="minimizable_name">Exit events</p>
+		<div class="d_element" id="exit_events">
+			<p class="design_help">Events launched when exiting the area. May have requirements. May have several outcomes. May be singular.</p>
+			<div class="d_centered">
+				<table class="sub_module">
+					<th>Event name</th><th>Limit exiting to?</th><th>Outcomes</th><th>Author</th><th>Added by</th><th></th>
+				</table><br/>
+				<span class="no_elements"><p class="design_help"><i>No exit events for this Area yet.</i></p></span>
+				<a href="www.google.com">Add new exit event</a> - <a href="www.google.com">Select exit event</a>
+			</div>
+		</div>
+	</div>
+	
+	<!-- hidden spans -->
+	
+	<div class="hide">
+		<span class="spawn_req_buttons">
+			<input type="button" class="add_item" value="Add new requirement"/>
+			<input type="button" class="add_item" value="Select requirement to add"/>
+		</span>
+		<span class="spawn_req_table">
+			<table class="sub_module compact">
+				<th>#</th><th>Requirement name</th><th>Author</th><th>Added by</th><th></th>
+			</table></br>
+		</span>
+		<span class="spawn_attrs">
+			<div class="info_box">
+				<p class="design_help"><b>Attributes:</b> <span class="attrs">Weapon, Edible</span></p>
+			</div>
+		</span>
+		<span class="spawn_info">
+			<div class="info_box">
+				<p class="design_help"><b>Name</b>: <span class="hidden module_id"></span><span class="name"></span></p>
+				<p class="design_help"><b>Author</b>: <span class="author"></span></p>
+			</div>
+		</span>
+		<span class="feature_info">
+			<div class="info_box">
+				<span class="hidden module_id">0</span>
+				<p class="design_help"><b>Name</b>: <input class="name" type="text" placeholder="Name" autocomplete="off"/></p>
+				<p class="design_help"><b>Author</b>: <span class="author"></span></p>
+			</div>
+			<div class="info_box">
+				<p class="design_help"><b>Type:</b>
+					<select class="feature_type">
+						 <option value="simple">Simple</option>
+						 <option value="complex">Complex</option>
+					</select>
+				</p>
+			</div>
+		</span>
+		<span class="feature_simple">
+			<textarea class="feature_description" name="area" placeholder="Feature description"></textarea>
+		</span>
+		<span class="feature_complex">
+			<div>
+				<div class="feature_outcomes">
+					<table class="sub_module compact">
+						<th>#</th><th class="outcome_header">Outcome name</th><th>Description</th><th>Verified</th><th class="addedby_header">Added by</th><th></th>
+					</table>
+					<div class="feature_outcome_buttons">
+						<input type="button" value="Add new outcome"/>
+						<input type="button" value="Select outcome to add"/>
+					</div>
+				</div>
+			</div>
+		</span>
+		<span class="attribute_event">
+			<select class="attr_type">
+				  <option value="trait">Trait</option>
+				  <option value="stat">Stat</option>
+				  <option value="skill">Skill</option>
+				  <option value="item">Item</option>
+				  <option value="item_condition">Item condition</option>
+				  <option value="variable">Variable</option>
+			</select>
+			<input class="attr_name" type="text" placeholder="Name"/>
+			<select class="trait_options">
+				  <option value="gain">Gain</option>
+				  <option value="remove">Remove</option>
+			</select>
+			<span class="item_cond_options">
+				<p class="d_small" style="display: inline"> for item <input type="text" class="for_item" placeholder="Item name"/></p>
+			</span>
+			<span class="value_options">:
+				<select class="value_mode">
+					  <option value="set">Set to value</option>
+					  <option value="add">Add</option>
+					  <option value="subtract">Subtract</option>
+					  <option value="add">Add %</option>
+					  <option value="subtract">Subtract %</option>
+					  <option value="multiply">Multiply by</option>
+				</select>
+				<input type="text" class="value_range" placeholder="Value range"/>
+				
+				<p class="d_small">With fallback <input type="text" class="value_fallback" placeholder="Fallback value"/></p>
+				<p class="d_small">With autoadjust 
+					<select class="aa_mode">
+					  <option value="add">Add</option>
+					  <option value="subtract">Subtract</option>
+					  <option value="add">Add %</option>
+					  <option value="subtract">Subtract %</option>
+					  <option value="multiply">Multiply by</option>
+					</select>
+					<input type="number" class="d_number aa_amount"/> Every <input type="number" class="d_number aa_interval"/> seconds until <input type="number" class="d_number aa_until"/>
+				</p>
+			</span>
+			<span class="mod_options">
+				<p class="d_small">With resist <input type="text" placeholder="Resist types" class="res_types"/> base <input type="number" class="d_number res_base"/>
+					<select class="res_ben">
+					  <option value="true">Beneficial value</option>
+					  <option value="false">Nonbeneficial value</option>
+					</select>
+					 with value multiplier <input type="number" class="d_number res_mul"/>
+				</p>
+				<p class="d_small">With weakness <input type="text" placeholder="Weakness types" class="weak_types"/> base <input type="number" class="d_number weak_base"/>
+					<select class="weak_ben">
+					  <option value="true">Beneficial value</option>
+					  <option value="false">Nonbeneficial value</option>
+					</select>
+					 with value multiplier <input type="number" class="d_number weak_mul"/>
+				</p>
+			</span>
+		</span>
+		<span class="damage_event">
+			<p class="d_small">
+				<input type="text" class="reason" placeholder="Reason"/> 
+				<select class="dmg_type">
+					<option value="dmg">Damages</option>
+					<option value="heal">Heals</option>
+					<option value="dmg_perc">Damages %</option>
+					<option value="heal_perc">Heals %</option>
+				</select>
+				<input type="number" class="d_number dmg_value"/> with damage types <input type="text" class="dmg_types"/> 
+			</p>
+		</span>
+		<span class="paragraph_event">
+			<textarea class="sub_paragraph" name="area"></textarea>
+		</span>
+		<span class="remove_button_template">
+			<input type="button" class="sub_element_remove" value="x"/>
+		</span>
+		<span class="options_button_template">
+			<input type="button" class="sub_element_options" value="v"/>
+			<div class="dropdown dropdown_options">
+				<p class="drop_input up">Move up</p>
+				<p class="drop_input down">Move down</p>
+				<p class="drop_input set_def">Set as default element</p>
+				<p class="drop_input remove">Remove element</p>
+			</div>
+		</span>
+		<span class="name_textfield">
+			<input type="text" class="input_name" value="" placeholder="Name"/>
+		</span>
+	</div>
+{% endblock %}
+{% block jsstatement %}
+	<script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}code_design.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}code_design_area.js"></script>
+{% endblock %}

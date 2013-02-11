@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 sp1 (x64) (http://www.altova.com) by Me (No) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="event">
+		<xs:annotation>
+			<xs:documentation>A vague event happening as a consequence of something.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name">
+					<xs:annotation>
+						<xs:documentation>Referrable name of the event. Not displayed to the player.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="uniqueid">
+					<xs:annotation>
+						<xs:documentation>Unique number for reference purposes.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dependency_list" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>List of entities this event depends on.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="dependency" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="keywordlist" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>List of keywords related to this element.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="connected_location" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Location associated with this event.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="singular" type="xs:boolean" default="false" minOccurs="0"/>
+				<xs:element name="requirement" type="requirementType" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Requirement for the event to actually happen.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="outcome_default" type="outcomeType">
+					<xs:annotation>
+						<xs:documentation>Default outcome for the event.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="outcome" type="outcomeType" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Possible optional outcomes.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="requirementType">
+		<xs:sequence>
+			<xs:element name="reqname" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Local name for the requirement.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="other_requirement" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Other local requirement.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="location" minOccurs="0"/>
+			<xs:element name="trait" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="traitname"/>
+						<xs:element name="traitfailurenotice" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="failurecondition" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="stat" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="statname"/>
+						<xs:element name="statfailurenotice"/>
+					</xs:sequence>
+					<xs:attribute name="failurecondition" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="itemname"/>
+						<xs:element name="itemcondition" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="itemconname"/>
+									<xs:element name="itemconvalue" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="failurecondition" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="time" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="lowerbound">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="gameday" minOccurs="0"/>
+									<xs:element name="hour" minOccurs="0"/>
+									<xs:element name="minute" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="upperbound" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="gameday" minOccurs="0"/>
+									<xs:element name="hour" minOccurs="0"/>
+									<xs:element name="minute" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="status" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="statusname"/>
+						<xs:element name="statusvalue" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="roll" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="rollname"/>
+						<xs:element name="rollchance" minOccurs="0"/>
+						<xs:element name="modifier" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="requirement" type="requirementType" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element name="effect" type="xs:float"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="keyword" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="exceptionlist" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="exception" type="requirementType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="resulting_outcome" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="autoadjustType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:annotation>
+					<xs:documentation>When to autoadjust.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="days"/>
+				<xs:element name="minutes"/>
+			</xs:choice>
+			<xs:choice>
+				<xs:annotation>
+					<xs:documentation>How much to autoadjust.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="add"/>
+				<xs:element name="subtract"/>
+				<xs:element name="multiply"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="outcomeType">
+		<xs:sequence>
+			<xs:element name="name"/>
+			<xs:element name="description" minOccurs="0"/>
+			<xs:element name="new" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>New entities created.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="trait" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="stat" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="stat_name"/>
+									<xs:element name="set_value" minOccurs="0"/>
+									<xs:element name="autoadjust" type="autoadjustType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Auto-adjusting value parameters.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="item_name"/>
+									<xs:element name="condition_list" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="cond_name"/>
+												<xs:element name="cond_value" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="autoadjust" type="autoadjustType" minOccurs="0"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="status" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="status_name"/>
+									<xs:element name="status_value" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="autoadjust" type="autoadjustType" minOccurs="0"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="spawn" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>New NPCs or monsters spawned.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="npc" minOccurs="1" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="npc_name">
+													<xs:annotation>
+														<xs:documentation>Reference to existing NPC XML.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:choice>
+													<xs:element name="amount">
+														<xs:annotation>
+															<xs:documentation>Fixed amount.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:sequence>
+														<xs:annotation>
+															<xs:documentation>Randomized amount.</xs:documentation>
+														</xs:annotation>
+														<xs:element name="amount_lowerbound"/>
+														<xs:element name="amount_upperbound" minOccurs="0"/>
+													</xs:sequence>
+												</xs:choice>
+												<xs:element name="location" minOccurs="0"/>
+												<xs:element name="condition" minOccurs="0" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>The conditions of the spawned entity.</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="cond_name"/>
+															<xs:element name="cond_value" minOccurs="0"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="angry" type="xs:boolean" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>Is the monster angry?</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="modify" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Existing entities modified.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="remove_trait" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="stat" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="stat_name"/>
+									<xs:choice>
+										<xs:element name="new_value"/>
+										<xs:element name="add"/>
+										<xs:element name="substract"/>
+										<xs:element name="multiply"/>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="item_name"/>
+									<xs:element name="condition_list" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="cond_name"/>
+												<xs:element name="cond_value" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="autoadjust" type="autoadjustType" minOccurs="0"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="status" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="status_name"/>
+									<xs:element name="status_value" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="autoadjust" type="autoadjustType" minOccurs="0"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="kill" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:choice>
+										<xs:element name="name"/>
+										<xs:element name="type"/>
+									</xs:choice>
+									<xs:choice>
+										<xs:element name="amount">
+											<xs:annotation>
+												<xs:documentation>Fixed amount.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:sequence>
+											<xs:annotation>
+												<xs:documentation>Randomized amount.</xs:documentation>
+											</xs:annotation>
+											<xs:element name="amount_lowerbound"/>
+											<xs:element name="amount_upperbound" minOccurs="0"/>
+										</xs:sequence>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="launch_event" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Launch event.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="transition" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Transitional area to move to.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="transition_name"/>
+						<xs:element name="from"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

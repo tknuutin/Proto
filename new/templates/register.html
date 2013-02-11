@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/editor_main.css" />
+{% endblock %}
+{% block content %}
+            <li id="nav_game"><a href="/proto/">Game</a></li>
+            <li id="nav_content"><a href="/proto/design">Add content</a></li>
+        </ul>
+    </div>
+    <div id="container">
+        <div class="register">
+            <p class="smallinfo"><span class="error">{{ message }}</span> Please input the information for your new user account.</p>
+            <form action="register.html" method="post">{% csrf_token %}
+                <p><input class="register" type="text" name="username" id="register_name" value="" placeholder="Username" autocomplete="off"/></p>
+                <p><input class="register" name="pass1" type="password" id="register_pass1" value="" placeholder="Password" autocomplete="off"/></p>
+                <p><input class="register" name="pass2" type="password" id="register_pass2" value="" placeholder="Password again" autocomplete="off"/></p>
+                <p><input class="register" name="email" type="text" id="register_email" value="" placeholder="Valid email" autocomplete="off"/></p>
+                <p><input class="register" type="submit" value="Enter" id="toplogin_submit"/></p>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Thu Oct 20 02:40:29 EEST 2011 -->
+
+
+<area xsi:noNamespaceSchemaLocation="..\areaschema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>Kitchen</name>
+	<uniqueid>2</uniqueid>
+	<dependency_list>
+		<dependency>base/area_home_bedroom.xml</dependency>
+		<dependency>base/area_bathroom.xml</dependency>
+	</dependency_list>
+	<location>
+		<root>Apartment building</root>
+		<loc>Stairs</loc>
+		<loc>Home</loc>
+		<loc>Kitchen</loc>
+	</location>
+	<enterEvent>
+		<embeddedEvent>
+			<name>kitchen_stub_toe</name>
+			<singular></singular>
+			<outcome>
+				<name>def</name>
+				<description>
+					<p>
+						<line>Owie! Your toe becomes stubbed on the door frame by practically no fault of your own!</line>
+						<take_damage><amount>2</amount><reason>Door</reason></take_damage>
+					</p>
+				</description>
+				<time>7</time>
+			</outcome>
+		</embeddedEvent>
+		<areaReq>Bedroom</areaReq>
+		<chance>70</chance>
+	</enterEvent>
+	<area_description>
+		<first_time>
+			<single_line>The kitchen is a weird narrow room extending to the right from the bedroom door, with a few cupboards, a sink, a table for one, and a fridge. Everything looks just clean enough to not start growing fungus. On your right is a small corridor with a door to the bathroom, and the front door. Right next to the bathroom is the door to the closet, but that has been stuck closed for years. Your apartment makes kind of a T-shape, which is about the stupidest shape for an apartment there is.</single_line>
+		</first_time>
+		<default><single_line>Kitchen/corridor area of your apartment is as suffocating and full of mold as ever. Looks like while you were gone that crack in the ceiling has grown again. </single_line> </default>
+	</area_description>
+	<movecommand>
+		<name>go to the bedroom</name>
+		<alias>bedroom</alias>
+		<type>move</type>
+		<outcome>
+			<name>moveb</name><time>5</time>
+			<move_to_area>base/area_home_bedroom.xml</move_to_area>
+		</outcome>
+	</movecommand>
+	<movecommand>
+		<name>go to the bathroom</name>
+		<alias>bathroom</alias>
+		<type>move</type>
+		<outcome><name>moveb</name><time>5</time><move_to_area>base/area_bathroom.xml</move_to_area></outcome>
+	</movecommand>
+	<movecommand>
+		<name>go outside</name>
+		<alias>outside</alias>
+		<type>move</type>
+		<outcome>
+			<name>moveb</name>
+			<requirement>
+				<req_name>mustNotBeBlocked</req_name><failure_notice><single_line>The door is blocked by some sort of heavy object and refuses to open! Somehow you're not surprised. But you do wonder who the fuck left that piece of furniture or whatever it is right in front of your front god damn door! You feel a slight panic at not being able to get outside your house.</single_line></failure_notice><exists><status><status_name>frontDoorNotBlocked</status_name></status></exists>
+			</requirement>
+			<time>20</time>
+			<move_to_area>base/area_stairs.xml</move_to_area>
+		</outcome>
+	</movecommand>
+	<command>
+		<name>open fridge and have a gander</name>
+		<alias>open fridge</alias>
+		<type>explore</type>
+		<req_ref>notUsed</req_ref>
+		<req_ref>cheeseTaken</req_ref>
+		<outcome>
+			<name>def</name>
+			<requirement>
+				<req_name>notUsed</req_name>
+				<not_exists>
+					<status><status_name>spore_communication_cheese_taken</status_name></status>
+					<status><status_name>spore_communication</status_name></status>
+				</not_exists>
+			</requirement>
+			<description>
+				<single_line>A putrid smell assaults your facial orifices. How horrifying! Once the green cloud of no doubtly fatal spores dissipates, you make an inventory of the contents of the fridge. Looks like the only thing that is still possibly edible is the block of cheese in the back. You figure you might as well take it.</single_line>
+			</description>
+			<time>15</time>
+			<new>
+				<stat><stat_name>Spore infestation</stat_name><value>5</value></stat>
+				<skill>
+					<skill_name>Spore cloud breath</skill_name>
+					<value>15</value>
+					<addAction>
+						<verb>sporebreath</verb>
+						<damage>16</damage>
+						<time_per_shot>6</time_per_shot>
+						<type>spore</type>
+					</addAction>
+				</skill>
+				<status><status_name>spore_communication_cheese_taken</status_name></status>
+				<item>
+					<item_node>
+						<item_name>Piece o' cheese</item_name>
+						<consumable>
+							<health_healed>5</health_healed>
+						</consumable>
+					</item_node>
+				</item>
+			</new>
+		</outcome>
+		<outcome>
+			<name>cheese_taken</name>
+			<requirement>
+				<req_name>cheeseTaken</req_name>
+				<exists><status><status_name>spore_communication_cheese_taken</status_name></status></exists>
+				<not_exists><status><status_name>spore_communication</status_name></status></not_exists>
+			</requirement>
+			<description>
+				<single_line>Nothing here except the spore colony.  It is forming interesting shapes and patterns that  might be it trying to communicate with you.</single_line>
+			</description>
+			<time>15</time>
+			<new>
+				<status>
+					<status_name>spore_communication</status_name><value>1</value>
+				</status>
+			</new>
+			<modify>
+				<stat>
+					<stat_name>Spore infestation</stat_name>
+					<add>1</add>
+				</stat>
+			</modify>
+		</outcome>
+	</command>
+	<command>
+		<name>communicate with spore entity</name>
+		<alias>communicate</alias>
+		<type>???</type>
+		<req_ref>
+first_comm</req_ref>
+		<req_ref>
+after_looksee</req_ref>
+		<outcome>
+			<name>def</name>
+			<requirement>
+				<req_name>first_comm</req_name><exists><status><status_name>spore_communication</status_name><range>1 1</range></status></exists>
+			</requirement>
+			<description>
+				<p>
+					<line>You stare at the attractive shapes the fungal colony is making. They seem to you like fractals. You lean in closer and cross your eyes, but it still doesn't really make sense. Suddenly very nervous, you take a deep breath but neglect to account for the spore cloud floating next to your nostrils.</line>
+					<modify><stat><stat_name>Spore infestation</stat_name><multiply>2</multiply
+></stat></modify>
+				</p>
+				<p>
+					<line>"LOOK BEDROOM WINDOW", says the fungus. That makes some serious fucking sense.</line>
+				</p>
+			</description>
+			<time>500</time>
+			<modify><status><status_name>spore_communication</status_name><add>1</add></status></modify>
+		</outcome>
+		<outcome>
+			<name>after_looksee</name>
+			<requirement>
+				<req_name>after_looksee</req_name><exists><status><status_name>spore_communication</status_name><range>3 3</range></status></exists>
+			</requirement>
+			<description><single_line>Boners.</single_line></description>
+			<time>5</time>
+		</outcome>
+	</command>
+	<command>
+		<name>splash water on yourself</name>
+		<alias>water</alias>
+		<singular></singular>
+		<type>stupidity</type>
+		<outcome>
+			<name>def</name>
+			<time>5</time>
+			<new>
+				<stat>
+					<stat_name>Damp clothes</stat_name>
+					<value>21</value>
+					<autoadjust>
+						<subtract>2</subtract>
+						<seconds>4</seconds>
+						<threshold>0</threshold>
+					</autoadjust>
+				</stat>
+			</new>
+		</outcome>
+	</command>
+	<entities>
+		<npc>
+			<spawn_name>initial_guy</spawn_name>
+			<npc_node>
+				<friendly></friendly>
+				<angry_on_attack></angry_on_attack>
+				<health>25</health>
+				<attack>
+					<damage_base>50</damage_base>
+					<hit_interval>7</hit_interval>
+					<damage_type>impact</damage_type>
+				</attack>
+			</npc_node>
+		</npc>
+		<npc>
+			<spawn_name>initial_monster</spawn_name>
+			<npc_node>
+				<monster></monster>
+				<health>30</health>
+				<attack>
+					<damage_base>2</damage_base>
+					<hit_interval>7</hit_interval>
+					<damage_type>impact</damage_type>
+				</attack>
+				<activity>
+					<angry></angry>
+					<interval>6</interval>
+					<description>Your blood is chilled by the violence you are witnessing!</description>
+					<chance>70</chance>
+				</activity>
+			</npc_node>
+		</npc>
+		<item>
+			<spawn_name>initial_knife</spawn_name>
+			<item_node>
+				<item_name>Dull knife</item_name>
+				<description>It's a dull knife. A knife that is dull. Not very sharp, in other words. You feel a certain kinship to the knife.</description>
+				<weapon>
+					<damage>18</damage>
+					<time_per_shot>4</time_per_shot>
+					<verb>hit</verb>
+					<verb>stab</verb>
+					<type>sharp</type>
+					<type>impact</type>
+				</weapon>
+				<throwable>
+					<damage>50</damage>
+					<type>impact</type>
+				</throwable>
+			</item_node>
+			<position>table</position>
+		</item>
+		<item>
+			<spawn_name>initial_gun</spawn_name>
+			<item_node>
+				<item_name>Deudly firearm</item_name>
+				<description>A gun that shoots incredibly deudly bullets!</description>
+				<weapon>
+					<damage>25</damage>
+					<time_per_shot>6</time_per_shot>
+					<verb>shoot</verb>
+					<verb>blasticate</verb>
+					<type>bullet</type>
+					<type>ranged</type>
+					<ammo_per_shot>1</ammo_per_shot>
+				</weapon>
+				<throwable>
+					<damage>1</damage>
+					<type>impact</type>
+				</throwable>
+				<condition visible="true">
+					<cond_name>ammo</cond_name>
+					<value>4</value>
+				</condition>
+			</item_node>
+			<position>table</position>
+		</item>
+	</entities>
+</area>

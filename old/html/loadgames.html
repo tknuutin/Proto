@@ -1,0 +1,10 @@
+{% extends "savedgames.html" %}
+{% block title %}Load game{% endblock %}
+{% block actionfield %}
+<form>Name of game to load:
+	<input type="text" name="load_name" id="load_name_input" value="" readonly="readonly"/>
+	<input type="button" value="Load" id="load_submit" />
+</form>
+<p id="message"></p>
+{% endblock %}
+{% block jsstatement %}<script type="text/javascript" src="{{ STATIC_URL }}code_loadedgames.js"></script>{% endblock %}

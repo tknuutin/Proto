@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Play - Modme {{ modme_version }}{% endblock %}
+{% block css_file %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_common.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_gamepage.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+{% endblock %}
+
+{% block content %}
+<div class="gamebox" id="game">
+	<textarea id="main" readonly="readonly">You wake up and realize you can't remember your name. Guess you'll have to come up with a new one.
+			
+What will your name be?</textarea>
+	<div id="sidewrapper">
+		<div class="side" id="info" readonly="readonly">Character and game info. Mouse over me!</div>
+		<div class="side" id="stats" readonly="readonly">Commands, stats, items, etc. Mouse over me!</div>
+	</div>
+	<div class="command"><form>&#62;<input type="text" id="command" value="" autocomplete="off"/><input type="button" value="Enter" id="submit"/></form></div>
+	<div id="saveload">
+		{% if user.is_authenticated %}
+			<form><input type="button" value="Game log" id="gamelog"/><input type="button" value="Save game" id="save"/><input type="button" value="Load game" id="load"/></form>
+		{% else %}
+			<p class="smallinfo"><a href="login.html">Log in</a> or <a href="register.html">register</a> to save, load, and access game log.</p>
+		{% endif %}
+	</div>
+	{% block unverified_info %}{% endblock %}
+	<div class="tips">
+		<p class="tips">
+			<b>Tips</b>: Try inputting the commands listed on the right. Try to guess commands. Read more about how to play <a href="about.html" target="_blank">here</a></i>
+		</p>
+	</div>
+</div>
+{% endblock %}
+{% block news %}
+	<div class="news_container">
+		<h2 id="news_heading">News</h2>
+		<hr/>
+		{% if news %}
+			{% for article in news %}
+			<div class="news_element">
+				<p class="news_info">Posted {{ article.date }}</p>
+				<h3>{{ article.title }}</h3>
+				<p class="news_text">{{ article.get_article_html }}</p>
+				<hr/>
+			</div>
+			{% endfor %}
+		{% else %}<p class="news_text">No recent news.</p>
+		{% endif %}
+	</div>
+	{% endblock %}
+{% block jsstatement %}
+	<script type="text/javascript" src="{{ STATIC_URL }}code_game.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+{% endblock %}

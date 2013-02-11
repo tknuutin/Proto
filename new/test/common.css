@@ -1,0 +1,49 @@
+
+#container, #container input{
+    font-family: 'Anaheim', sans-serif;
+    font-size:1.1em;
+}
+#navigation{
+    float:left;
+    margin-left:20px;
+}
+#navigation a{
+    font-family: 'Anaheim', sans-serif;
+    font-size:1.0em;
+}
+#navigation ul{
+    list-style-type:none;
+}
+#navigation li{
+    padding-left:18px;
+    padding-right:10px;
+}
+#navigation li.selected{
+    background-repeat: no-repeat;
+    background-position: 0px 3px;
+    background-size:10px 15px;
+    padding-left: 18px; 
+}
+#container{
+    margin-top:40px;
+    width:700px;
+    margin-left:auto;
+    margin-right:auto;
+}
+.login_small{
+    margin-left:50px;
+    color:silver;
+}
+a{
+    color:green;
+}
+.login_big input{
+    border:1px solid green;
+}
+input[type="submit"]:hover{
+    background-color:#005701;
+    border:1px solid green;
+}
+
+
+

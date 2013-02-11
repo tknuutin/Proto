@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/editor_main.css" />
+{% endblock %}
+{% block content %}
+            <li id="nav_game"><a href="/proto/">Back to game</a></li>
+            <li id="nav_editor" class="selected"><a>Editor main</a></li>
+            <li id="nav_tutorials"><a>Tutorials</a></li>
+        </ul>
+    </div>
+    <div id="container">
+        <p>Hello, {{user.username}}. Here you can design and publish game modules.</p>
+        <div class="d_element">
+            <h2 class="dbtitle">Locations</h2>
+            {% if locations %}
+            <table id="locations">
+                <th>Location</th><th>Date created</th><th>Status</th><th></th>
+                {% for loc in locations %}
+                <tr data-rownum="{{ forloop.counter }}">
+                    <td>{{ loc.getUnicode }}</td>
+                    <td>{{ loc.date_created }}</td>
+                    <td>{{ loc.get_play_status }}</td>
+                    <td class="edit_cell"><a href="location/{{ loc.id }}">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}<div class="d_element_empty"><p class="info">No areas created by you yet.</p></div>
+            {% endif %}
+            <a class="createbutton" id="location_create" href="location/new">Create a new Location</a>
+        </div>
+        <div class="d_element">
+            <h2 class="dbtitle">Features</h2>
+            {% if features %}
+            <table id="features">
+                <th>Feature</th><th>Date created</th><th>Status</th><th></th>
+                {% for feature in features %}
+                <tr data-rownum="{{ forloop.counter }}">
+                    <td>{{ feature.getUnicode }}</td>
+                    <td>{{ feature.date_created }}</td>
+                    <td>{{ feature.get_play_status }}</td>
+                    <td class="edit_cell"><a href="feature/{{ feature.id }}">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}<div class="d_element_empty"><p class="info">No areas created by you yet.</p></div>
+            {% endif %}
+            <a class="createbutton" id="feature_create" href="feature/new">Create a new Feature</a>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/editor_main.js"></script>
+{% endblock %}

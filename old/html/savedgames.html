@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}Save game{% endblock %}</title>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}{% block cssfile %}style_savedgames.css{% endblock %}" />
+		
+	</head>
+	<body>
+	{% block content %}
+	{% if saved_games %}
+	<table id="savedgames">
+		<th>User</th><th>Player name</th><th>Save name</th><th>Date</th>
+		{% for save in saved_games %}
+		<tr id="row_{{ forloop.counter }}">
+			<td onclick='SelectRow({{ forloop.counter }})'>{{ save.user.username }}</td>
+			<td onclick='SelectRow({{ forloop.counter }})'>{{ save.playername }}</td>
+			<td onclick='SelectRow({{ forloop.counter }})'>{{ save.savename }}</td>
+			<td onclick='SelectRow({{ forloop.counter }})'>{{ save.date }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<p>Total: <b id="total_saves">{{ saved_games|length }}</b></p>
+	{% else %}<p>No saved games yet.</p>
+	{% endif %}
+	<div style="margin-left:5px; margin-top:20px;">
+	{% block actionfield %}
+		<form>Name of new save:
+			<input type="text" name="save_name" id="save_name_input" value="" autocomplete="off"/>
+			<input class="toplogin" type="button" value="Save" id="save_submit"/>
+		</form>
+		<p id="message"></p>
+	{% endblock %}
+	</div>
+	
+	{% endblock %}
+	{% block jsstatement %}<script type="text/javascript" src="{{ STATIC_URL }}code_savedgames.js"></script>{% endblock %}
+</body>
+</html>

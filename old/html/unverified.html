@@ -1,0 +1,6 @@
+{% extends "game.html" %}
+{% block title %}UNVERIFIED PLAY - Modme {{ modme_version }}{% endblock %}
+
+{% block unverified_info %}<div id="unverified_info"><p style="font-size:12px; margin:3px;">You are playing the unverified version of Modme. Content is user-submitted without any checking for validity or coherence. You may encounter bugs, glitches, game-breaking or offensive content. This site is not responsible for any content you may encounter while in unverified mode.</p></div>{% endblock %}
+
+{% block jsstatement %}<script type="text/javascript" src="{{ STATIC_URL }}code_unverified.js"></script>{% endblock %}

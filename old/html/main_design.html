@@ -1,0 +1,51 @@
+{% extends "design_base.html" %}
+{% block title %}Design - Modme {{ modme_version }}{% endblock %}
+{% block content %}
+<div class="centered" id="content">
+	<div class="d_element">
+		<p class="info">Welcome to the Designer. Here you can design, edit, and publish new game elements.<br/><br/>Create a new Area to begin.</p>
+	</div>
+	<div class="d_element">
+		<h2 class="dbtitle">Areas</h2>
+		{% if areas %}
+		<table id="areatable">
+			<th>Area name</th><th>Location</th><th>Date created</th><th>Status</th><th></th>
+			{% for area in areas %}
+			<tr id="row_{{ forloop.counter }}">
+				<td>{{ area.name }}</td>
+				<td>{{ area.location }}</td>
+				<td>{{ area.date_created }}</td>
+				<td>{{ area.publish_status }}</td>
+				<td class="edit_cell">Edit</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}<div class="d_element_empty"><p class="info">No areas created by you yet.</p></div>
+		{% endif %}
+		<a class="createbutton" id="area_createbutton" href="/area/new.html">Create a new Area</a>
+	</div>
+	<div class="d_element">
+		<h2 class="dbtitle">Commands</h2>
+		{% if commands %}
+		<table id="commandtable">
+			<th>Command name</th><th>Area</th><th>Outcomes</th><th>Date created</th><th>Status</th><th></th>
+			{% for command in commands %}
+			<tr id="row_{{ forloop.counter }}">
+				<td>{{ command.name }}</td>
+				<td>{{ command.area.name }}</td>
+				<td>{{ command.outcomes.count }}</td>
+				<td>{{ command.date_created }}</td>
+				<td>{{ command.status }}</td>
+				<td class="edit_cell">Edit</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}<div class="d_element_empty"><p class="info">No commands created by you yet.</p></div>
+		{% endif %}
+		<a class="createbutton" id="command_createbutton" href="/command/new.html">Create a new Command</a>
+	</div>
+</div>
+{% endblock %}
+{% block jsstatement %}
+	<script type="text/javascript" src="{{ STATIC_URL }}/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+{% endblock %}

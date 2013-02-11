@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Tue Nov 22 22:24:46 EET 2011 -->
+
+<area xsi:noNamespaceSchemaLocation="..\areaschema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>Banthroom</name>
+	<uniqueid>3</uniqueid>
+	<dependency_list>
+		<dependency>base/area_home_bedroom.xml</dependency>
+		<dependency>base/area_kitchen.xml</dependency>
+	</dependency_list>
+	<location>
+		<root>Apartment building</root>
+		<loc>Stairs</loc>
+		<loc>Home</loc>
+		<loc>Bathroom</loc>
+	</location>
+	<enterEvent>
+		<embeddedEvent>
+			<name>bathroom_onEnterStatModify</name>
+			<singular></singular>
+			<outcome>
+				<name>def</name>
+				<time>1</time>
+				<modify>
+					<stat>
+						<popular>1</popular>
+						<add>1</add>
+					</stat>
+					<item>
+						<item_name>Deudly firearm</item_name>
+						<message>You found some ammo for yo gun.</message>
+						<condition>
+							<cond_name>ammo</cond_name>
+							<add>1</add>
+						</condition>
+					</item>
+				</modify>
+			</outcome>
+		</embeddedEvent>
+	</enterEvent>
+	<area_description><default><single_line>Your bathroom is clean and shiny. In fact, it is SO clean you could have a baby lick the floor around the toilet. Your shower and the sink are also basically insanely fashionable. The faucets alone cost you a month's salary.</single_line></default></area_description>
+	<movecommand>
+		<name>back to the kitchen with you</name>
+		<alias>kitchen</alias>
+		<type>move</type>
+		<outcome>
+			<name>def</name>
+			<time>5</time>
+			<move_to_area>base/area_kitchen.xml</move_to_area>
+		</outcome>
+	</movecommand>
+	<cmd_sequence>
+		<exclusive></exclusive>
+		<cmd>
+			<name>draw a happy face on the mirror with lipstick</name>
+			<alias>draw</alias>
+			<type>draw</type>
+			<req_ref>hasLipstick1</req_ref>
+			<outcome>
+				<name>def</name>
+				<requirement>
+					<req_name>hasLipstick1</req_name>
+					<exists>
+						<item>
+							<item_name>lipstick</item_name>
+						</item>
+					</exists>
+				</requirement>
+				<description><single_line>You draw a jolly face with eyes full of laughter and mouth that gapes like the mouth of Hell itself.</single_line></description>
+				<time>20</time>
+			</outcome>
+		</cmd>
+		<cmd>
+			<name>add a moustache to the face</name>
+			<alias>moustache</alias>
+			<type>draw</type>
+			<req_ref>hasLipstick2</req_ref>
+			<outcome>
+				<name>def</name>
+				<requirement>
+					<req_name>hasLipstick2</req_name>
+					<exists>
+						<item>
+							<item_name>lipstick</item_name>
+						</item>
+					</exists>
+				</requirement>
+				<description><single_line>The face is now looking positively demonic with the addition of the monstrous facehair.</single_line></description>
+				<time>9</time>
+			</outcome>
+		</cmd>
+		<cmd>
+			<name>add dapper hat</name>
+			<alias>hat</alias>
+			<type>draw</type>
+			<req_ref>hasLipstick3</req_ref>
+			<outcome>
+				<name>def</name>
+				<requirement>
+					<req_name>hasLipstick3</req_name>
+					<exists>
+						<item>
+							<item_name>lipstick</item_name>
+						</item>
+					</exists>
+				</requirement>
+				<description><single_line>The hat, leaning on one side in a casual yet threatening manner, is simply oozing of charisma and menace. You look deep into the eyes of your hellspawn and feel a psychotic pull. Whoah... how long have you been standing here?</single_line></description>
+				<time>128</time>
+				<take_damage>
+					<amount>6</amount>
+					<reason>Your latent psychosis</reason>
+					<type>mental</type>
+				</take_damage>
+			</outcome>
+		</cmd>
+	</cmd_sequence>
+	<entities>
+		<item>
+			<spawn_name>initial_tube</spawn_name>
+			<item_node>
+				<item_name>stick of butter</item_name>
+				<description>Delicious, delicious butter. All the vitamins and energy a growing man needs.</description>
+				<consumable>
+					<health_healed>50</health_healed>
+				</consumable>
+			</item_node>
+			<amount>3</amount>
+			<position>floor</position>
+		</item>
+		<item>
+			<spawn_name>initial_lipstick</spawn_name>
+			<item_node>
+				<item_name>lipstick</item_name>
+				<description>The lipstick is colored a gaudy bright red. It looks basically like lipstick a kid would put on while her mom is not watching.</description>
+			</item_node>
+			<amount>1</amount>
+		</item>
+	</entities>
+</area>

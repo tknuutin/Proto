@@ -1,0 +1,13 @@
+
+#navigation a{
+    color:silver;
+}
+#navigation li.selected{
+    background-image: url('static/greyblock.png');
+}
+#navigation li:hover{
+    background-color: #D1D1D1;
+}
+#container{
+    border: 0px solid #D1D1D1;
+}

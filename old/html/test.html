@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Design - Modme</title>
+		<link rel="stylesheet" type="text/css" href="style_common.css" />
+		<link rel="stylesheet" type="text/css" href="style_gamepage.css" />
+		<link rel="stylesheet" type="text/css" href="style_design_main.css" />
+	</head>
+	<body>
+	<div id="topbanner">
+		<p id="banner"><a class="header" href="index.html">Modme - the modular text adventure</a></p>
+		<div id="toplogin">
+			<form action="login.html" method="post"><a href="login.html">Login:</a> <input class="toplogin" type="text" name="username" id="toplogin_name_input" value="" placeholder="Username" autocomplete="off"/>
+			<input class="toplogin" type="password" name="password" id="toplogin_pass_input" value="" placeholder="Password" autocomplete="off"/>
+			<input class="toplogin" type="submit"  value="Enter" id="toplogin_submit"/>
+			</form>
+		</div>
+	</div>
+	<div id="navigation">
+		<p id="navlinks"><a class="navlink" href="about.html">About</a> : <a class="navlink" href="index.html">Play</a> : <a class="navlink" href="unverified.html">Play UNVERIFIED</a> : <a class="navlink_current" href="/design/main.html">Design</a></p>
+	</div>
+	<div class="centered" id="content">
+		<h2 class="d_page_title">New area</h2>
+		<div class="d_element">
+			<p class="design_help"><input type="text" id="area_name" name="area" placeholder="Name" autocomplete="off"/>
+			Name of the area. <i>(Kitchen, Bathroom, Street name...)</i></p>
+		</div>
+		<div class="d_element">
+			<p class="design_help"><input type="text" id="area_location" name="area" placeholder="Location" autocomplete="off"/>
+			Location of the area as a path separated by a colon. <i>(Streetname &#58; Cafe &#58; Kitchen)</i></p>
+		</div>
+		<div class="d_element">
+			<p class="design_help"><input type="checkbox" id="area_fasttravel" name="area"/>
+			Area is fast travellable?</p>
+		</div>
+	</div>
+	<div class="centered" id="content">
+		<div class="d_element" id="first_time">
+			<input type="radio" name="desc_type" value="sim"/>Simple first time description <input type="radio" name="desc_type" value="com"/>Complex first time description <input type="radio" name="desc_type" value="non"/>No first time description
+			<hr/>
+			<span id="choice_ft_simple">
+				<p class="design_help">Simple description when entering the area for the first time. Optional. Be descriptive and informative!</p>
+				<textarea class="sub_paragraph" id="area_firsttime" name="area" placeholder="First time description"></textarea>
+			</span>
+			<span id="choice_ft_complex">
+				<p class="design_help">Complex description when entering the area for the first time. May include several paragraphs and events. Optional. Be descriptive and informative!</p>
+				<table class="sub_element_table">
+					</tr id="ft_1"><tr><td><hr/></td></tr>
+				</table>
+				<div class="add_elements">
+					<input type="button" value="Add paragraph"/ id="first_time_add_par">
+					<input type="button" value="Add player attribute event" id="first_time_add_attr"/>
+					<input type="button" value="Add damage/heal event" id="first_time_add_dmg"/>
+				</div>
+			</span>
+		</div>
+	</div>
+	<div class="centered" id="content">
+		<div class="d_element">
+			<p class="design_help">Simple default description for the area.</p>
+			<textarea class="description" id="area_default" name="area" placeholder="Default description"/></textarea>
+		</div>
+		<hr/>
+		</div>
+	</div>
+	<div class="hide">
+		<span class="attribute_event">
+			<select>
+				  <option value="trait">Trait</option>
+				  <option value="stat">Stat</option>
+				  <option value="skill">Skill</option>
+				  <option value="item">Item</option>
+				  <option value="item_condition">Item condition</option>
+				  <option value="variable">Variable</option>
+			</select>
+			<input type="text" id="area_firsttime_a_x" placeholder="Name"/>:
+			<select>
+				  <option value="set">Set to value</option>
+				  <option value="add">Add</option>
+				  <option value="subtract">Subtract</option>
+				  <option value="add">Add %</option>
+				  <option value="subtract">Subtract %</option>
+				  <option value="multiply">Multiply by</option>
+			</select>
+			<input type="text" placeholder="Value or value range"/>
+			<p class="d_small">With fallback <input type="text" placeholder="Fallback value"/></p>
+			<p class="d_small">With autoadjust 
+				<select>
+				  <option value="add">Add</option>
+				  <option value="subtract">Subtract</option>
+				  <option value="add">Add %</option>
+				  <option value="subtract">Subtract %</option>
+				  <option value="multiply">Multiply by</option>
+				</select>
+				<input type="number" class="d_number"/> Every <input type="number" class="d_number"/> seconds.
+			</p>
+			<p class="d_small">With resist <input type="text" placeholder="Resist types"/> base <input type="number" class="d_number"/>
+				<select>
+				  <option value="add">Beneficial value</option>
+				  <option value="subtract">Nonbeneficial value</option>
+				</select>
+				 with value multiplier <input type="number" class="d_number"/>
+			</p>
+			<p class="d_small">With weakness <input type="text" placeholder="Weakness types"/> base <input type="number" class="d_number"/>
+				<select>
+				  <option value="add">Beneficial value</option>
+				  <option value="subtract">Nonbeneficial value</option>
+				</select>
+				 with value multiplier <input type="number" class="d_number"/>
+			</p>
+		</span>
+		<span class="damage_event">
+			<p class="d_small">
+				<select>
+				  <option value="add">Damage</option>
+				  <option value="subtract">Heal</option>
+				</select>
+				 <input type="number" class="d_number"/> hitpoints with damage types <input type="text"/>
+			</p>
+		</span>
+		<span class="paragraph_event">
+			<textarea class="sub_paragraph" id="area_firsttime_p_NUMBER" name="area" placeholder="First time description, paragraph NUMBER"></textarea>
+		</span>
+		<span class="remove_button_template">
+			<input type="button" class="sub_element_remove" value="Remove"/>
+		</span>
+	</div>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script type="text/javascript" src="code_design.js"></script>
+  </body>
+</html>
+

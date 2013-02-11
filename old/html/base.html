@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}Modme {{ modme_version }}{% endblock %}</title>
+		<link rel="SHORTCUT ICON" href="{{STATIC_URL}}favicon.ico">  
+		{% block css_file %}
+			<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_common.css" />
+		{% endblock %}
+	</head>
+	<body>
+	{% block topad %}{% endblock %}
+	<div class="centered" id="topbanner">
+		{% block topbanner %}
+		<p id="banner"><a class="header" href="index.html">Modme - the modular text adventure</a></p>
+		<div id="toplogin">
+		{% if user.is_authenticated %}
+			<p class="smallinfo">Logged in as {{ user.username }}. <a href="logout.html">Log out</a></p>
+		{% else %}
+			<form action="login.html" method="post"><a href="login.html">{% csrf_token %}Login:</a> <input class="toplogin" type="text" name="username" id="toplogin_name_input" value="" placeholder="Username" autocomplete="off"/>
+			<input class="toplogin" type="password" name="password" id="toplogin_pass_input" value="" placeholder="Password" autocomplete="off"/>
+			<input class="toplogin" type="submit"  value="Enter" id="toplogin_submit"/>
+			</form>
+		{% endif %}
+		</div>
+		{% endblock %}
+	</div>
+	<div id="navigation">
+		{% load custom_tags %}
+		{% block navigation %}
+			<p id="navlinks">
+				<a class="{% active_navlink request "^/about\.html$" %}" href="about.html">About</a> : 
+				<a class="{% active_navlink request "(^/$)|(^/index\.html$)|(^$)|(^/play\.html$)" %}" href="index.html">Play</a> : 
+				<a class="{% active_navlink request "^/unverified\.html$" %}" %}" href="unverified.html">Play UNVERIFIED</a> : 
+				<a class="{% active_navlink request "^/design/" %}" %}" href="/design/main.html">Design</a>
+				{% if user.is_superuser %} : 
+					<a class="{% active_navlink request "^/control\.html$" %}" href="control.html">Admin control</a>
+				{% endif %}
+			</p>
+		{% endblock %}
+	</div>
+	{% block content %}{% endblock %}
+	{% block news %}{% endblock %}
+	{% block bottomad %}{% endblock %}
+   	{% block bottom_statement %}
+		<p class="bottom">Powered by Python, Django, and jQuery. Made by Tarmo Knuutinen. Built in 2012.</p>
+	{% endblock %}
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	{% block jsstatement %}{% endblock %}
+	</body>
+</html>

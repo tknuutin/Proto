@@ -1,0 +1,30 @@
+{% extends "design_module_base.html" %}
+{% block gamemodule_design %}
+	<div class="d_element">
+		<div class="areaname">
+			<p class="info"><input type="text" id="area_name" name="area" value="name" autocomplete="off"/>
+			Name of the area. <i>(Kitchen, Bathroom, Street name...)</i></p>
+		</div>
+		<br/>
+		<div class="location">
+			<input type="text" id="area_location" name="area" value="location" autocomplete="off"/>
+			<p class="info">Location of the area as a path separated by a colon. <i>(Streetname &#58; Cafe &#58; Kitchen)</i></p>
+		</div>
+		<br/>
+		<div class="location">
+			<input type="checkbox" id="area_fasttravel" name="area" value="fasttravel" />
+			<p class="info">Area is fast travellable?</p>
+		</div>
+		<hr/>
+		<div class="location">
+			<p class="info">Simple description when entering the area for the first time. Optional.</p><br/>
+			<textarea class="description" id="area_firsttime" name="area" value="first_time" />
+		</div>
+		<br/>
+		<hr/>
+		<div class="location">
+			<p class="info">Simple default description for the area.</p><br/>
+			<textarea class="description" id="area_default" name="area" value="default" />
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+body{
+    background-color:black;
+}
+
+#container, #container input{
+    color:green;
+}
+#navigation a{
+    color:green;
+}
+#navigation li.selected{
+    background-image: url('/static/greenblock.png');
+}
+#navigation li:hover{
+    background-color:#005701;
+}
+#container{
+    border: 1px solid black;
+}
+
+#container ::-webkit-scrollbar{
+    background-color: black;
+    border: 1px solid green;
+}
+#container ::-webkit-scrollbar-button{
+    background-color: black;
+    border: 1px solid #005701;
+}
+#container ::-webkit-scrollbar-track{
+    background-color: black;
+    border: 1px solid #005701;
+}
+#container ::-webkit-scrollbar-track-piece{
+    background-color: black;
+    border: 1px solid #005701;
+}
+#container ::-webkit-scrollbar-thumb{
+    background-color: black;
+    border: 1px solid #005701;
+}
+#container ::-webkit-scrollbar-corner{
+    background-color: black;
+    border: 1px solid #005701;
+}
+#container ::-webkit-resizer{
+    background-color: black;
+    border: 1px solid #005701;
+
+    }
+#container hr{
+    border:0px;
+    border-top:1px dotted  #005701;
+    background-color:black;
+    height:1px;
+}
+#container input{
+    background: transparent;
+    outline: none;
+    border:0px;
+    font-size:1.1em;
+}
+#container input:focus{
+    outline: none;
+}
+#game_screen{
+    padding:5px;
+    max-height:500px;
+    overflow:auto;
+}
+#game_screen p{
+    -webkit-margin-before:0.5em;
+    -webkit-margin-after:0.5em;
+}
+
+#fancybox-content{
+    color:green;
+    font-family:'Anaheim', sans-serif;
+    background-color:black;
+    border: 1px solid green;
+}

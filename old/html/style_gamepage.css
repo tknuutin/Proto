@@ -1,0 +1,80 @@
+
+		textarea{
+			border: 3px solid #cccccc;
+			padding: 5px;
+			font-family: System, "Lucida Console";
+		}
+		textarea#main{
+			margin-left:10px;
+			margin-top:10px;
+			margin-bottom:10px;
+			width: 705px;
+			height: 430px;
+		}
+		
+		a.sideHover{
+			color:#FF0000;
+		}
+		a.sideNormal{
+			color:#000000;
+		}
+		
+		div#unverified_info{
+			border: 3px solid #A63030;
+			margin-top:40px;
+			margin-left:auto;
+			margin-right:auto;
+			width:720px;
+			padding:2px;
+			background-color:#CCCCCC;
+		}
+		div#sidewrapper{
+			margin-top:13px;
+			margin-right:15px;
+			float:right;
+		}
+		div.side{
+			white-space:nowrap;
+			overflow:auto;
+			font-family: "Lucida Console";
+			font-size:14px;
+			background-color:#FFFFFF;
+			border:5px;
+			padding:5px;
+			outline-style:solid;
+			outline-color:#BBBBBB;
+			outline-width:medium;
+		}
+		div#stats{
+			margin-top:5px;
+			width: 370px;
+			height: 295px;
+		}
+		div#info{
+			width: 370px;
+			height: 120px;
+		}
+		div.command{
+			margin-left:10px;
+			float:left;
+		}
+		div#saveload{
+			margin-right:10px;
+			float:right;
+		}
+		input#command{
+			width: 450px;
+		}
+		div.tips{
+			margin-top:40px;
+			margin-left:40px;
+			margin-right:40px;
+			padding-bottom:20px;
+			margin-bottom:10px;
+			font-family: "Times New Roman";
+		}
+		p.tips{font-family: "Times New Roman";}
+		p.dev{
+			margin:50px;
+			font-family: "Times New Roman";
+		}

@@ -1,0 +1,76 @@
+		
+		div.hide, div.hide *{
+			display:none;
+		}
+		textarea.description, .sub_paragraph{
+			width:600px;
+			height:40px;
+		}
+		h2.dbtitle, .d_page_title{
+			margin:5px;
+			font-family: "Times New Roman";
+		}
+		h2.d_page_title{
+			text-align:center;
+		}
+		div.sub_element{
+			width:80%;
+		}
+		p.d_small{
+			font-family: "Times New Roman";
+			font-size:12px;
+			margin-top:4px;
+			margin-bottom:3px;
+		}
+		input.d_number{width:55px;}
+		input.sub_element_remove{
+			display.inline;
+		}
+		
+		div.d_element_empty{
+			width:100%;
+			padding-left:5px;
+			margin-bottom:5px;
+			background-color:white;
+			border: 1px solid black;
+		}
+		table.d_element{
+			width:100%;
+			margin-bottom:5px;
+			background-color:white;
+		}
+		.d_element table, th, td{
+			text-align:left;
+		}
+		.d_element table, td{
+			border: 1px solid black;
+			border-collapse:collapse;
+			
+		}
+		.d_element td, th{
+			padding:5px;
+		}
+		.d_element th{
+			font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+		}
+		p.design_info{
+			font-family: "Times New Roman";
+			margin-top:20px;
+			margin-bottom:15px;
+		}
+		p.design_help{
+			font-family: "Times New Roman";
+			margin-top:2px;
+			margin-bottom:2px;
+		}
+		a.createbutton{
+			margin-top:20px;
+			margin-left:5px;
+		}
+		table.sub_element_table, table.sub_element_table > tbody > tr > td{
+			background-color:#F2F2F2;
+			border:0px;
+			overflow:auto;
+		}
+
+		

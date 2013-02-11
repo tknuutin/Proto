@@ -1,0 +1,20 @@
+body {background-color:#FFFFFF;}
+table{
+	max-height:100px;: 600px;
+	
+}
+table, th, td {
+	background-color:#FFFFFF;
+	border: 1px solid #AAAAAF;
+	border-collapse: collapse;
+	margin-right: 10px;
+	overflow:auto;
+}
+th {
+	height:50px;
+	padding:5px;
+	background-color:#AAAAAF;
+}
+td {
+	padding:5px;
+}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block css_file %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_common.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_login.css" />
+{% endblock %}
+{% block content %}
+<div class="login">
+	{% if user.is_authenticated %}
+	<p>Logged in succesfully as {{ user.username }}.</p>
+	{% else %}
+	<p class="smallinfo">{{ message }} Please log in or <a href="register.html">register</a>.</p>
+	<form action="login.html" method="post">{% csrf_token %}<input class="toplogin" type="text" name="username" id="toplogin_name_input" value="" placeholder="Username" autocomplete="off"/>
+	<input class="toplogin" name="password" type="password" id="toplogin_pass_input" value="" placeholder="Password" autocomplete="off"/>
+	<input class="toplogin" type="submit" value="Enter" id="toplogin_submit"/>
+	</form>
+	{% endif %}
+</div>
+{% endblock %}

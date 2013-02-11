@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Sat Jul 02 23:31:10 EEST 2011 -->
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="area">
+		<xs:annotation>
+			<xs:documentation>An area, room, or other singular place in which the player is. Basic building blocks of the game.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Referrable name of the area. Visible to the player.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="uniqueid" type="xs:int">
+					<xs:annotation>
+						<xs:documentation>Unique number for reference purposes.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="0" name="dependency_list">
+					<xs:annotation>
+						<xs:documentation>List of entities this event depends on.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" minOccurs="1" name="dependency" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="0" name="keywordlist">
+					<xs:annotation>
+						<xs:documentation>List of keywords related to this area.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" minOccurs="1" name="keyword" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element default="false" minOccurs="0" name="hide_location" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>Hide the location display at start?</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice maxOccurs="1" minOccurs="1">
+					<xs:element name="override">
+						<xs:annotation>
+							<xs:documentation>The existing area that this area overrides in certain conditions.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="override_location" type="locationType">
+									<xs:annotation>
+										<xs:documentation>Location of the overridable area.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="1" name="override_req" type="requirementType">
+									<xs:annotation>
+										<xs:documentation>Requirement for something to happen.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="location" type="locationType">
+						<xs:annotation>
+							<xs:documentation>Location of this area.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:choice>
+				<xs:element maxOccurs="1" minOccurs="0" name="fastTravellable" type="xs:boolean"/>
+				<xs:element maxOccurs="unbounded" minOccurs="0" name="enterEvent" type="transeventType">
+					<xs:annotation>
+						<xs:documentation>event launched when entering the area</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="area_description">
+					<xs:annotation>
+						<xs:documentation>description of the area</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element minOccurs="0" name="first_time" type="descriptionType">
+								<xs:annotation>
+									<xs:documentation>The description for the first time player enters the area.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="default" type="descriptionType">
+								<xs:annotation>
+									<xs:documentation>Default description for the area.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="unbounded" minOccurs="1" name="movecommand" type="commandType"/>
+				<xs:element maxOccurs="unbounded" minOccurs="0" name="command" type="commandType"/>
+				<xs:element maxOccurs="unbounded" minOccurs="0" name="cmd_sequence">
+					<xs:annotation>
+						<xs:documentation>Sequence of commands that can only be seen and triggered after the previous command has been triggered. By default sequences are singular use only.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="0" name="exclusive"/>
+							<xs:element maxOccurs="unbounded" minOccurs="2" name="cmd" type="commandType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="0" name="entities">
+					<xs:annotation>
+						<xs:documentation>entities in the area.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="npc" type="npcSpawn"/>
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="item" type="itemSpawn"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="unbounded" minOccurs="0" name="exitEvent" type="transeventType">
+					<xs:annotation>
+						<xs:documentation>event launched when exiting the area</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="requirementType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="req_name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Local name of the requirement for reference purposes.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="failure_notice" type="descriptionType"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="location" type="locationType">
+						<xs:annotation>
+							<xs:documentation>current location requirement. location or location range. multiple instances of this will be treated as OR</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="visited" type="locationType">
+						<xs:annotation>
+							<xs:documentation>has visited a location -requirement. location or range. if same as currentlocation, will be treated as &quot;not first time visiting&quot;</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="not_visited" type="locationType">
+						<xs:annotation>
+							<xs:documentation>has not visited a location -requirement. location or range. if same as currentlocation, will be treated as &quot;not first time visiting&quot;</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="exists">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="trait">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="traitname"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="stat">
+									<xs:annotation>
+										<xs:documentation>Stat requirement.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="stat_name"/>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two integers separated by a space. first one is minimum value, second one is maximum. both numbers inclusive. number MUST be inside this range. or req fails.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="skill">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="1" minOccurs="1" name="skill_name">
+												<xs:annotation>
+													<xs:documentation>Name of the status.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two integers separated by a space. first one is minimum value, second one is maximum. both numbers inclusive. number MUST be inside this range. or req fails.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="status">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="1" minOccurs="1" name="status_name">
+												<xs:annotation>
+													<xs:documentation>Name of the status.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two integers separated by a space. first one is minimum value, second one is maximum. both numbers inclusive. number MUST be inside this range. or req fails.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="item_name"/>
+											<xs:element maxOccurs="unbounded" minOccurs="0" name="item_condition">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="item_con_name">
+															<xs:annotation>
+																<xs:documentation>Name of the item condition.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element minOccurs="0" name="range" type="xs:string">
+															<xs:annotation>
+																<xs:documentation>two integers separated by a space. first one is minimum value, second one is maximum. both numbers inclusive. number MUST be inside this range or req fails.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="keyword">
+									<xs:annotation>
+										<xs:documentation>Keyword requirement.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="not_exists">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="trait">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="traitname"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="stat">
+									<xs:annotation>
+										<xs:documentation>Stat requirement.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="stat_name"/>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two numbers separated by a space. minimum and maximum value. both values inclusive. value must NOT be in this range, or req will be false</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="skill">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="1" minOccurs="1" name="skill_name">
+												<xs:annotation>
+													<xs:documentation>Name of the status.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two numbers separated by a space. minimum and maximum value. both values inclusive. value must NOT be in this range, or req will be false</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="status">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="1" minOccurs="1" name="status_name">
+												<xs:annotation>
+													<xs:documentation>Name of the status.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element minOccurs="0" name="range" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>two numbers separated by a space. minimum and maximum value. both values inclusive. value must NOT be in this range, or req will be false</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="item_name"/>
+											<xs:element maxOccurs="unbounded" minOccurs="0" name="item_condition">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="item_con_name">
+															<xs:annotation>
+																<xs:documentation>Name of the item condition.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element minOccurs="0" name="range" type="xs:string">
+															<xs:annotation>
+																<xs:documentation>two numbers separated by a space. minimum and maximum value. both values inclusive. value must NOT be in this range, or req will be false</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="keyword">
+									<xs:annotation>
+										<xs:documentation>Keyword requirement.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="comparison">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="first">
+									<xs:complexType>
+										<xs:choice>
+											<xs:element name="stat_name"/>
+											<xs:element name="skill_name"/>
+											<xs:element name="status_name"/>
+										</xs:choice>
+									</xs:complexType>
+								</xs:element>
+								<xs:element minOccurs="0" name="first_miss_false">
+									<xs:annotation>
+										<xs:documentation>if there is no stat/skill/status with the indicated name, return comparison as false?</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="second">
+									<xs:complexType>
+										<xs:choice>
+											<xs:element name="stat_name"/>
+											<xs:element name="skill_name"/>
+											<xs:element name="status_name"/>
+										</xs:choice>
+									</xs:complexType>
+								</xs:element>
+								<xs:element minOccurs="0" name="sec_miss_false">
+									<xs:annotation>
+										<xs:documentation>if there is no stat/skill/status with the indicated name, return comparison as false?</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:choice>
+									<xs:element name="is_equal"/>
+									<xs:sequence>
+										<xs:choice>
+											<xs:element name="is_bigger"/>
+											<xs:element name="is_smaller"/>
+										</xs:choice>
+										<xs:element minOccurs="0" name="or_equal"/>
+									</xs:sequence>
+								</xs:choice>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="experience">
+						<xs:annotation>
+							<xs:documentation>Minimum amount of experience to have.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="time">
+						<xs:annotation>
+							<xs:documentation>Time requirement. Current global time has to be inside the bounds.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="1" minOccurs="1" name="lowerbound">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element minOccurs="0" name="gameday"/>
+											<xs:element minOccurs="0" name="hour"/>
+											<xs:element minOccurs="0" name="minute"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element minOccurs="0" name="upperbound">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element minOccurs="0" name="gameday"/>
+											<xs:element minOccurs="0" name="hour"/>
+											<xs:element minOccurs="0" name="minute"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="roll">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="1" minOccurs="1" name="rollname"/>
+								<xs:element maxOccurs="1" minOccurs="1" name="base_chance">
+									<xs:annotation>
+										<xs:documentation>Base chance for the roll. Will be used if lookup for the stat/skill/status fails.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element maxOccurs="1" minOccurs="0" name="value_correlation">
+									<xs:annotation>
+										<xs:documentation>Correlation with the value of a stat, skill, or status. Will default to base chance if unable to access value.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:choice maxOccurs="1" minOccurs="1">
+											<xs:element name="stat_name"/>
+											<xs:element name="skill_name"/>
+											<xs:element name="status_name"/>
+										</xs:choice>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="modifier">
+									<xs:annotation>
+										<xs:documentation>Modifier for the roll.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="unbounded" minOccurs="0" name="requirement" type="requirementType"/>
+											<xs:choice maxOccurs="1" minOccurs="1">
+												<xs:element name="pos_effect" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>Effect if the requirement is filled. Positive percentage added to roll.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="neg_effect" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>Negative percentage added to roll. For example if value is 30, roll will be modified by 0.7</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:choice>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="other_req" type="requirementType">
+						<xs:annotation>
+							<xs:documentation>Will be treated as AND. If you have multiple other_reqs, they will be treated as OR. Therefore one requirement with two other_reqs will be treated as X AND ( Y OR Z )</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="exception" type="requirementType">
+						<xs:annotation>
+							<xs:documentation>exception to the requirement.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="resulting_outcome" type="xs:string"/>
+				</xs:sequence>
+				<xs:element name="never">
+					<xs:annotation>
+						<xs:documentation>if this node is present, requirement will never be true</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="autoadjustType">
+		<xs:sequence>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>How much to autoadjust.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="add" type="xs:integer"/>
+				<xs:element name="subtract" type="xs:integer"/>
+				<xs:element name="multiply" type="xs:integer"/>
+			</xs:choice>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>When to autoadjust, as in, what is the interval?</xs:documentation>
+				</xs:annotation>
+				<xs:element name="days" type="xs:integer"/>
+				<xs:element name="minutes" type="xs:integer"/>
+				<xs:element name="seconds" type="xs:integer"/>
+			</xs:choice>
+			<xs:element default="0" maxOccurs="1" minOccurs="1" name="threshold" type="xs:float">
+				<xs:annotation>
+					<xs:documentation>Threshold until stopping. If threshold is 0 then the parent might be deleted as a result from reaching 0.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice maxOccurs="1" minOccurs="0">
+				<xs:element name="embeddedEvent" type="embeddedEvent">
+					<xs:annotation>
+						<xs:documentation>Embedded event launched after reaching the threshold. If there is no embeddedEvent or launchedEvent specified, upon reaching the threshold the stat/skill/entity will be deleted.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="launchedEvent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Reference to the external event launched from reaching the threshold.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="outcomeType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="name">
+				<xs:annotation>
+					<xs:documentation>Name. For debugging purposes.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="requirement" type="requirementType">
+				<xs:annotation>
+					<xs:documentation>Requirement for the outcome to happen.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="description" type="descriptionType"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="time" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>Time estimate for the thing in seconds.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="take_damage">
+				<xs:annotation>
+					<xs:documentation>Inflict damage to the player.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="amount"/>
+							<xs:element name="percentage"/>
+						</xs:choice>
+						<xs:element minOccurs="0" name="reason" nillable="1">
+							<xs:annotation>
+								<xs:documentation>Reason in the form of &quot;&lt;text here&gt; hits you for &lt;amount&gt; damage!&quot;</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="type"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="heal">
+				<xs:annotation>
+					<xs:documentation>Heal player.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="amount"/>
+							<xs:element name="percentage"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="reason">
+							<xs:annotation>
+								<xs:documentation>Reason in the form of &quot;&lt;text here&gt; heals you for &lt;amount&gt; health!&quot;</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="gain_exp" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>Gain experience.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="new" type="newThingType">
+				<xs:annotation>
+					<xs:documentation>New entities created.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="modify" type="modifyThingType">
+				<xs:annotation>
+					<xs:documentation>Existing entities modified.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="kill">
+				<xs:annotation>
+					<xs:documentation>Kill NPCs or monsters in the current area.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice maxOccurs="1" minOccurs="1">
+							<xs:element name="name">
+								<xs:annotation>
+									<xs:documentation>Name of the entity to be killed.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="type">
+								<xs:annotation>
+									<xs:documentation>Type of entity to be killed.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+						<xs:choice maxOccurs="1" minOccurs="0">
+							<xs:element name="amount">
+								<xs:annotation>
+									<xs:documentation>Fixed amount.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:sequence>
+								<xs:annotation>
+									<xs:documentation>Randomized amount.</xs:documentation>
+								</xs:annotation>
+								<xs:element name="amount_lowerbound"/>
+								<xs:element minOccurs="0" name="amount_upperbound"/>
+							</xs:sequence>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="launch_event">
+				<xs:annotation>
+					<xs:documentation>Launch event.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="move_to_area" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Area to move to. relative path, no / at start</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="transeventType">
+		<xs:annotation>
+			<xs:documentation>Events that are launched when entering or exiting a new area.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:element name="embeddedEvent" type="embeddedEvent"/>
+				<xs:element name="eventRef">
+					<xs:annotation>
+						<xs:documentation>reference to the event launched</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element maxOccurs="1" minOccurs="0" name="exclusive" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>no other transevents can happen at this moment</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="areaReq" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>requirement that player is entering from or exiting to an area or area range. multiple instances of this node will be treated as OR. should be the name of the area.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="chance" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>chance for event to happen in percentage integer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="commandType">
+		<xs:annotation>
+			<xs:documentation>Commands have a number of possible outcomes. The outcomes can have requirements associated with them. The first outcome listed that either has no requirements or has requirements that pass will be executed. Can also have list requirements - requirements for listing the command.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="name">
+				<xs:annotation>
+					<xs:documentation>Name of the command. Will be shown to the player.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="alias">
+				<xs:annotation>
+					<xs:documentation>Shorthand alias for the command.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element default="false" minOccurs="0" name="singular" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>is command single use?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="type">
+				<xs:annotation>
+					<xs:documentation>Type of command. Attack, abscond, talk, other? Move commands always have time move.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="list_requirement" type="requirementType">
+					<xs:annotation>
+						<xs:documentation>Requirement for something to happen. Multiple instances of requirements will be usually treated as OR.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="req_ref" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>list requirement referral. must be a name of the requirement in an outcome of this command. will be copied here.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:element name="randomized_outcome">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" minOccurs="2" name="outcome" type="outcomeType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="1" name="outcome" type="outcomeType">
+						<xs:annotation>
+							<xs:documentation>Optional outcomes.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="descriptionType">
+		<xs:sequence>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="1" name="single_line">
+						<xs:annotation>
+							<xs:documentation>One unbroken line of text.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="1" name="p">
+						<xs:annotation>
+							<xs:documentation>Paragraph of text. Will be separated by empty lines in game.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="unbounded" minOccurs="1" name="line">
+									<xs:annotation>
+										<xs:documentation>The first lines of description. Linebreaks will be added to the end of line blocks.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:choice maxOccurs="unbounded" minOccurs="0">
+									<xs:element name="text">
+										<xs:annotation>
+											<xs:documentation>Additional text descriptions. Linebreaks will be added to the end of descriptions.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="new" type="newThingType"/>
+									<xs:element name="modify" type="modifyThingType"/>
+									<xs:element name="take_damage">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:choice maxOccurs="1" minOccurs="1">
+													<xs:element name="amount"/>
+													<xs:element name="percentage"/>
+												</xs:choice>
+												<xs:element maxOccurs="1" minOccurs="0" name="reason">
+													<xs:annotation>
+														<xs:documentation>Reason for damage. Should be a noun. For example, &quot;Blinding light&quot; or &quot;Unbearable lightness of being&quot;</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element maxOccurs="unbounded" minOccurs="0" name="type"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="heal">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:choice>
+													<xs:element name="amount"/>
+													<xs:element name="percentage"/>
+												</xs:choice>
+												<xs:element maxOccurs="1" minOccurs="0" name="reason">
+													<xs:annotation>
+														<xs:documentation>Reason in the form of &quot;&lt;text here&gt; heals you for &lt;amount&gt; health!&quot;</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:choice>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="newThingType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="trait">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="trait_name"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addResist">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="resist_base" type="xs:integer"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addWeakness">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="weakness_base" type="xs:integer"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="stat">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="1" name="stat_name"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice maxOccurs="1" minOccurs="1">
+							<xs:element name="value"/>
+							<xs:sequence>
+								<xs:element name="value_min">
+									<xs:annotation>
+										<xs:documentation>Randomized value minimum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="value_max">
+									<xs:annotation>
+										<xs:documentation>Randomized value maximum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:choice>
+						<xs:element minOccurs="0" name="autoadjust" type="autoadjustType">
+							<xs:annotation>
+								<xs:documentation>Auto-adjusting value parameters.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addResist">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="resist_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addWeakness">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="weakness_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="skill">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="skill_name"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice maxOccurs="1" minOccurs="1">
+							<xs:element name="value"/>
+							<xs:sequence>
+								<xs:element name="value_min"/>
+								<xs:element name="value_max"/>
+							</xs:sequence>
+						</xs:choice>
+						<xs:element minOccurs="0" name="autoadjust" type="autoadjustType">
+							<xs:annotation>
+								<xs:documentation>Auto-adjusting value parameters.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addResist">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="resist_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addWeakness">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="weakness_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addAction">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="unbounded" minOccurs="1" name="verb" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>verbs that the player can use to, uhm, use the weapon. weapon can also be used by equipping it and using &quot;attack &lt;npc&gt;&quot;, or with the &quot;use &lt;item&gt; on &lt;npc&gt;&quot; keyword. custom verbs will be in the format &quot;&lt;verb&gt; &lt;npc&gt; with &lt;item&gt;&quot;</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:sequence maxOccurs="1" minOccurs="0">
+										<xs:element maxOccurs="1" minOccurs="1" name="damage">
+											<xs:annotation>
+												<xs:documentation>Damage done.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element maxOccurs="1" minOccurs="1" name="time_per_shot" type="xs:integer"/>
+										<xs:element maxOccurs="unbounded" minOccurs="0" name="type">
+											<xs:annotation>
+												<xs:documentation>Type of damage done. When throwing, damage is always &quot;impact&quot;.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="0" name="action_event" type="embeddedEvent"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="status">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="status_name"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="local" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>is status a locally used status that will be deleted after the player leaves the area?</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="visible" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>is visible to the player?</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice maxOccurs="1" minOccurs="0">
+							<xs:element name="value"/>
+							<xs:sequence>
+								<xs:element name="value_min"/>
+								<xs:element name="value_max"/>
+							</xs:sequence>
+						</xs:choice>
+						<xs:element minOccurs="0" name="autoadjust" type="autoadjustType"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addResist">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="resist_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="addWeakness">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="damage_type">
+										<xs:annotation>
+											<xs:documentation>To what damage type does this resist apply?</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="weakness_base" type="xs:integer"/>
+										<xs:element name="correlation">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element maxOccurs="1" minOccurs="1" name="bigger_better" type="xs:boolean"/>
+													<xs:element maxOccurs="1" minOccurs="1" name="multiplier" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice maxOccurs="1" minOccurs="1">
+							<xs:element name="item_ref"/>
+							<xs:element name="item_node" type="embeddedItem"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="spawn">
+				<xs:annotation>
+					<xs:documentation>New NPCs or monsters spawned.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="spawned_item" type="itemSpawn"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="spawned_npc" type="npcSpawn"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="modifyThingType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="remove_trait">
+				<xs:annotation>
+					<xs:documentation>Remove a trait permanently.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="trait_name"/>
+							<xs:element name="popular" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="random"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="stat">
+				<xs:annotation>
+					<xs:documentation>Modify a stat.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="stat_name">
+								<xs:annotation>
+									<xs:documentation>Name of the stat to be modified.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="popular" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="random"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice>
+							<xs:element name="add" type="xs:integer"/>
+							<xs:element name="add_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="subtract" type="xs:integer"/>
+							<xs:element name="subtract_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="multiply" type="xs:integer"/>
+							<xs:element name="multiply_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="new_value" type="xs:integer"/>
+							<xs:element name="new_value_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="fallback">
+							<xs:annotation>
+								<xs:documentation>if player doesn&apos;t have this stat, create it with this value. if this element doesn&apos;t exist and player doesn&apos;t have the stat, nothing happens.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="percentage">
+							<xs:annotation>
+								<xs:documentation>Use value as percentage instead of straigt-up value? If value = 100 and percentage, stat/skill/status will be removed, even if there is no value.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="setAutoAdjust" type="autoadjustType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="skill">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="skill_name">
+								<xs:annotation>
+									<xs:documentation>Name of the stat to be modified.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="popular" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="random"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice>
+							<xs:element name="add" type="xs:integer"/>
+							<xs:element name="add_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="subtract" type="xs:integer"/>
+							<xs:element name="subtract_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="multiply" type="xs:integer"/>
+							<xs:element name="multiply_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="new_value" type="xs:integer"/>
+							<xs:element name="new_value_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="fallback">
+							<xs:annotation>
+								<xs:documentation>if player doesn&apos;t have this stat, create it with this value. if this doesn&apos;t exist, nothing happens.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="percentage">
+							<xs:annotation>
+								<xs:documentation>Use value as percentage instead of straigt-up value? If value = 100 and percentage, stat/skill/status will be removed, even if there is no value.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="setAutoAdjust" type="autoadjustType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="status">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="status_name"/>
+							<xs:element name="popular" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="random"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice maxOccurs="1" minOccurs="0">
+							<xs:element name="set_visible">
+								<xs:annotation>
+									<xs:documentation>is visible to the player?</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="set_invisible"/>
+							<xs:element name="toggle"/>
+						</xs:choice>
+						<xs:choice>
+							<xs:element name="add" type="xs:integer"/>
+							<xs:element name="add_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="subtract" type="xs:integer"/>
+							<xs:element name="subtract_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="multiply" type="xs:integer"/>
+							<xs:element name="multiply_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="new_value" type="xs:integer"/>
+							<xs:element name="new_value_random">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value_min">
+											<xs:annotation>
+												<xs:documentation>inclusive minimum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="value_max">
+											<xs:annotation>
+												<xs:documentation>inclusive maximum value</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="fallback">
+							<xs:annotation>
+								<xs:documentation>if player doesn&apos;t have this stat, create it with this value. if this doesn&apos;t exist, nothing happens.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="percentage">
+							<xs:annotation>
+								<xs:documentation>Use value as percentage instead of straigt-up value? If value = 100 subtract and percentage, stat/skill/status will be removed, even if there is no value.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="setAutoAdjust" type="autoadjustType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+				<xs:annotation>
+					<xs:documentation>Modify an item. If player doesn&apos;t have the item, nothing happens.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="item_name"/>
+							<xs:element name="popular" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="random"/>
+						</xs:choice>
+						<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Custom message for this stat event. If this is present, it will replace the generic &quot;gained &lt;thing&gt;&quot; message.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice>
+							<xs:sequence>
+								<xs:element name="condition">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:choice>
+												<xs:element maxOccurs="1" minOccurs="1" name="cond_name"/>
+												<xs:element name="popular" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>Modify the nth element by use count. For example, if the element value is 1, modify the most popular element of that type.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:choice>
+											<xs:choice maxOccurs="1" minOccurs="1">
+												<xs:choice>
+													<xs:element name="new_value"/>
+													<xs:sequence>
+														<xs:element name="value_min"/>
+														<xs:element name="value_max"/>
+													</xs:sequence>
+												</xs:choice>
+												<xs:sequence>
+													<xs:choice>
+														<xs:element name="add"/>
+														<xs:element name="subtract"/>
+														<xs:element maxOccurs="1" minOccurs="1" name="multiply"/>
+													</xs:choice>
+													<xs:element maxOccurs="1" minOccurs="0" name="fallback">
+														<xs:annotation>
+															<xs:documentation>if player doesn&apos;t have this stat, create it with this value. if this doesn&apos;t exist, nothing happens.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:choice>
+											<xs:element minOccurs="0" name="setAutoAdjust" type="autoadjustType"/>
+										</xs:sequence>
+										<xs:attribute default="false" name="visible" type="xs:boolean" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:element name="lose"/>
+							<xs:element name="drop"/>
+						</xs:choice>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="embeddedEvent">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="name"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="dependency_list">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="1" name="dependency"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="keywordlist">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="1" name="keyword"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="singular"/>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="outcome" type="outcomeType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="embeddedItem">
+		<xs:sequence>
+			<xs:element name="item_name"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="size" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>integer determining the size of the item. consult sizeintegers.txt for documentation. default 15.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="description" type="xs:string"/>
+			<xs:choice maxOccurs="1" minOccurs="0">
+				<xs:element name="equippable">
+					<xs:annotation>
+						<xs:documentation>Is item equippable?</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" name="type">
+								<xs:annotation>
+									<xs:documentation>Hat? Pants? Armor? Butts?</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="weapon">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" name="damage">
+								<xs:annotation>
+									<xs:documentation>Damage done.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="time_per_shot" type="xs:integer"/>
+							<xs:element maxOccurs="unbounded" minOccurs="1" name="verb" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>verbs that the player can use to, uhm, use the weapon. weapon can also be used by equipping it and using &quot;attack &lt;npc&gt;&quot;, or with the &quot;use &lt;item&gt; on &lt;npc&gt;&quot; keyword. custom verbs will be in the format &quot;&lt;verb&gt; &lt;npc&gt; with &lt;item&gt;&quot;</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="type">
+								<xs:annotation>
+									<xs:documentation>Type of damage done. When throwing, damage is always &quot;impact&quot;.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="0" name="ammo_per_shot" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>how many ammo is exhausted per shot? if this element doesn&apos;t exist, weapon doesnt need ammo. if it does exist, weapon needs to have a condition called &quot;ammo&quot;.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:element maxOccurs="1" minOccurs="0" name="throwable">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="damage">
+							<xs:annotation>
+								<xs:documentation>Damage done.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="type">
+							<xs:annotation>
+								<xs:documentation>Type of damage done. When throwing, damage is always &quot;impact&quot;.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="consumable">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="health_healed" type="xs:integer"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="consume_effect" type="embeddedEvent"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="condition">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="cond_name"/>
+						<xs:sequence maxOccurs="1" minOccurs="0">
+							<xs:choice maxOccurs="1" minOccurs="1">
+								<xs:element name="value"/>
+								<xs:sequence>
+									<xs:element name="value_min"/>
+									<xs:element name="value_max"/>
+								</xs:sequence>
+							</xs:choice>
+							<xs:element minOccurs="0" name="autoadjust" type="autoadjustType"/>
+						</xs:sequence>
+					</xs:sequence>
+					<xs:attribute default="false" name="visible" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="locationType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="exact">
+				<xs:annotation>
+					<xs:documentation>Is location exact? or does it describe a range?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="root" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>bottom location.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="loc" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>additional locations on top of the root.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="embeddedNpc">
+		<xs:sequence>
+			<xs:sequence maxOccurs="1" minOccurs="0">
+				<xs:element maxOccurs="1" minOccurs="1" name="name"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="description" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Short description of the entity and what it is doing.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:element name="monster">
+					<xs:annotation>
+						<xs:documentation>Is NPC a monster? That determines whether it is classfied as a monster and whether it is angry on sight.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="friendly">
+						<xs:annotation>
+							<xs:documentation>Is NPC friendly? Will be classified as an NPC and will not be angry on spawn.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="angry_on_attack">
+						<xs:annotation>
+							<xs:documentation>Does the friendly NPC get angry when attacked? If not, never angry.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element maxOccurs="1" minOccurs="1" name="health" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>health as positive integer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="attack">
+				<xs:annotation>
+					<xs:documentation>In what way does the monster or friendly creature attack. Default is 1 impact damage every 8 seconds.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="1" name="damage_base">
+							<xs:annotation>
+								<xs:documentation>Base damage.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="hits">
+							<xs:annotation>
+								<xs:documentation>Number of hits. Default 1.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="1" minOccurs="0" name="hit_interval">
+							<xs:annotation>
+								<xs:documentation>Interval between hits.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="damage_type" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="activity">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="angry">
+							<xs:annotation>
+								<xs:documentation>does the npc need to be angry for this to happen?</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="interval" type="xs:integer"/>
+						<xs:element name="description" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="requirement"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="launchedEvent" type="embeddedEvent"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="chance" type="xs:integer">
+							<xs:annotation>
+								<xs:documentation>chance in percentage</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="equipEffectsType">
+		<xs:sequence>
+			<xs:element name="newTrait"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="npcSpawn">
+		<xs:sequence>
+			<xs:element name="spawn_name"/>
+			<xs:element name="npc_node" type="embeddedNpc">
+				<xs:annotation>
+					<xs:documentation>Reference to existing NPC XML.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="spawn_req" type="requirementType"/>
+			<xs:choice maxOccurs="1" minOccurs="0">
+				<xs:element name="amount">
+					<xs:annotation>
+						<xs:documentation>Fixed amount.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:annotation>
+						<xs:documentation>Randomized amount.</xs:documentation>
+					</xs:annotation>
+					<xs:element name="amount_lowerbound"/>
+					<xs:element minOccurs="0" name="amount_upperbound"/>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="see_req" type="requirementType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="itemSpawn">
+		<xs:sequence>
+			<xs:element name="spawn_name"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="item_node" type="embeddedItem"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="spawn_req" type="requirementType"/>
+			<xs:choice maxOccurs="1" minOccurs="0">
+				<xs:element name="amount">
+					<xs:annotation>
+						<xs:documentation>Fixed amount.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:annotation>
+						<xs:documentation>Randomized amount.</xs:documentation>
+					</xs:annotation>
+					<xs:element name="amount_lowerbound"/>
+					<xs:element minOccurs="0" name="amount_upperbound"/>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element maxOccurs="1" minOccurs="0" name="position" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Where in the room is the item? String will be used in form &quot;There is a rock on the &lt;position&gt;&quot;. If none is specified, used form will be &quot;There is a rock in the room&quot;.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="see_req" type="requirementType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

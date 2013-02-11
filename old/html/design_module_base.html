@@ -1,0 +1,17 @@
+{% extends "design_base.html" %}
+{% block title %}Design - Modme {{ modme_version }}{% endblock %}
+{% block css_file %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_common.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style_design_main.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+{% endblock %}
+{% block content %}
+<div class="centered" id="content">
+	{% block gamemodule_design %}{% endblock %}
+	{% block gamemodule_common %}
+	<div class="d_element">
+		<p class="info">Add dependencies here. Coming soon.</p>
+	</div>
+	{% endblock %}
+</div>
+{% endblock %}
