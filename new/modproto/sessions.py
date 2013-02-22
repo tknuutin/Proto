@@ -53,6 +53,7 @@ class Session():
     def __init__(self, name):
         self.uid = str(uuid.uuid4().hex)
         dbsession = models.DBSession()
+        dbsession.save()
         self.dbid = dbsession.id
         
         game = protogame.Game(name, self.dbid)
@@ -80,10 +81,10 @@ def create_logfile(session, folderName, command, exception):
     LAST_ERROR = datetime.datetime.now()
 
 
-def new_session(playerName):
-    """ Create a new session with the given playername. Returns a HttpResponse with the game info and id. """
+def new_session(player_name):
+    """ Create a new session with the given player name. Returns a HttpResponse with the game info and id. """
     global SESSIONS_CREATED
-    session = Session(str(playerName).capitalize())
+    session = Session(str(player_name).capitalize())
     uid = session.uid
     session_dict[uid] = session
     SESSIONS_CREATED += 1

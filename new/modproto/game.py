@@ -163,7 +163,8 @@ class Location(Feature):
             self.trigger(game)
         except ObjectDoesNotExist:
             game.send_text(self.ftdesc)
-            models.LocationVisited(session=models.Session.objects.get(id=game.sessionid), location=models.DBLocation.objects.get(id=self.dbid))
+            print "trying to get DBSession with id: " + str(game.sessionid)
+            models.LocationVisited(session=models.DBSession.objects.get(id=game.sessionid), location=models.DBLocation.objects.get(id=self.dbid))
             self.trigger(game, show_description=False)
         
         connectionnames = [connection.upper() for connection in self.connections.iterkeys()]
