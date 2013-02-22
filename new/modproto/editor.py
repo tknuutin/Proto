@@ -76,7 +76,7 @@ def location(request, id=None, message=None):
 @login_required
 def editor_main(request):
     """ Editor main view. """
-    locations = DBLocation.objects.filter(creator=request.user)
+    locations = DBLocation.objects.all() if request.user.is_superuser else DBLocation.objects.filter(creator=request.user)
     events = DBEvent.objects.filter(creator=request.user)
     features = DBFeature.objects.filter(creator=request.user)
     conditions = DBCondition.objects.filter(creator=request.user)

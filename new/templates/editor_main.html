@@ -11,16 +11,18 @@
     </div>
     <div id="container">
         <p>Hello, {{user.username}}. Here you can design and publish game modules.</p>
+        {% if user.is_superuser %} <p>You are a superuser. Showing absolutely everything.</p>{% endif %}
         <div class="d_element">
             <h2 class="dbtitle">Locations</h2>
             {% if locations %}
             <table id="locations">
-                <th>Location</th><th>Date created</th><th>Status</th><th></th>
+                <th>Location</th><th>Date created</th><th>Status</th><th>Creator</th><th></th>
                 {% for loc in locations %}
                 <tr data-rownum="{{ forloop.counter }}">
                     <td>{{ loc.getUnicode }}</td>
                     <td>{{ loc.date_created }}</td>
                     <td>{{ loc.get_play_status }}</td>
+                    <td>{{ loc.creator.username }}</td>
                     <td class="edit_cell"><a href="location/{{ loc.id }}">Edit</a></td>
                 </tr>
                 {% endfor %}
