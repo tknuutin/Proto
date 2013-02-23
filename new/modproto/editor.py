@@ -75,7 +75,8 @@ def module_save(request, cls, fieldnames, mandatoryfields, moduleid=None):
 def module_delete(request, cls, moduleid):
     if cls.objects.filter(id=moduleid).exists():
         module = cls.objects.get(id=moduleid)
-        if module.creator.id == request.user.id or request.user.is_superuser:
+        if module.is_editable(request.user):
+            #TODO: make status into deleted instead of actually deleting it?
             module.delete()
             messages.success(request, "Succesfully deleted " + cls.get_simple_name().capitalize())
             return HttpResponseRedirect(DOMAIN + reverse("editor-main"))
@@ -83,7 +84,41 @@ def module_delete(request, cls, moduleid):
             messages.error("You are not authorized to delete this module.")
             return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
     else:
+        messages.error("Module not found.")
         return HttpResponseRedirect(reverse("editor-main"))
+    
+@login_required
+def module_publish(request, cls, moduleid):
+    if cls.objects.filter(id=moduleid).exists():
+        module = cls.objects.get(id=moduleid)
+        if module.is_editable(request.user):
+            module.publish()
+            module.save()
+            messages.success(request, "Succesfully published " + cls.get_simple_name().capitalize())
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+        else:
+            messages.error("You are not authorized to publish this module.")
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+    else:
+        messages.error("Module not found.")
+        return HttpResponseRedirect(reverse("editor-main"))
+    
+@login_required
+def module_unpublish(request, cls, moduleid):
+    if cls.objects.filter(id=moduleid).exists():
+        module = cls.objects.get(id=moduleid)
+        if module.is_editable(request.user):
+            module.unpublish()
+            module.save()
+            messages.success(request, "Succesfully unpublished " + cls.get_simple_name().capitalize())
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+        else:
+            messages.error("You are not authorized to unpublish this module.")
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+    else:
+        messages.error("Module not found.")
+        return HttpResponseRedirect(reverse("editor-main"))
+        
 
 @login_required  
 def location(request, locationid=None): 
@@ -97,6 +132,10 @@ def location(request, locationid=None):
             
         if "delete" in request.POST:
             return module_delete(request, DBLocation, locationid)
+        if "publish" in request.POST:
+            return module_publish(request, DBLocation, locationid)
+        if "unpublish" in request.POST:
+            return module_unpublish(request, DBLocation, locationid)
         
     if locationid:
         if locationid.isdigit() and DBLocation.objects.filter(id=int(locationid)).exists():

@@ -63,6 +63,15 @@ class DBGameModule(models.Model):
     def save_from_request(cls, request, fields, moduleid=None):
         raise NotImplementedError("Save method for class %d not implemented" % (cls.__name__))
     
+    def publish(self):
+        self.play_status = "PU"
+        
+    def unpublish(self):
+        self.play_status = "UN"
+        
+    def verify(self):
+        self.play_status = "VE"
+    
     def is_editable(self, user):
         if (self.design_status == "AL" \
             or (self.design_status == "OW" \

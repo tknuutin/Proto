@@ -43,6 +43,8 @@
                     {% if location.creator.id == user.id or user.is_superuser %} 
                         {% if location.play_status == "UN" %} 
                             <input class="publish" type="submit" name="publish" value="Publish"/>
+                        {% else %}
+                            <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
                         {% endif %}
                         <input class="delete" type="submit" name="delete" value="Delete"/>
                     {% endif %}

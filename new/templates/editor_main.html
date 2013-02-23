@@ -21,7 +21,7 @@
             <h2 class="dbtitle">Locations</h2>
             {% if locations %}
             <table id="locations">
-                <th>Location</th><th>Date created</th><th>Status</th><th>Creator</th><th></th>
+                <th>Name</th><th>Date created</th><th>Status</th><th>Creator</th><th></th>
                 {% for loc in locations %}
                 <tr data-rownum="{{ forloop.counter }}">
                     <td>{{ loc.getUnicode }}</td>
@@ -50,7 +50,7 @@
                 </tr>
                 {% endfor %}
             </table>
-            {% else %}<div class="d_element_empty"><p class="info">No areas created by you yet.</p></div>
+            {% else %}<div class="d_element_empty"><p class="info">No features created by you yet.</p></div>
             {% endif %}
             <a class="createbutton" id="feature_create" href="feature/new">Create a new Feature</a>
         </div>
