@@ -146,7 +146,7 @@ class DBLocation(DBGameModule):
     ftdesc = models.TextField(null=True, blank=True)
     
     @classmethod
-    def get_simple_name(self): return "location"
+    def get_simple_name(cls): return "location"
     
     def get_absolute_url(self):
         return "/proto/editor/location/" + str(self.id)
