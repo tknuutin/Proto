@@ -38,6 +38,20 @@
 input[type="submit"]:hover{
     background-color:#C7C7C7;
 }
+.message{
+    display:inline-block;
+    padding:5px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.message.error{
+    border:1px solid red;
+    background-color:rgb(255, 194, 194);
+}
+.message.success{
+    border:1px solid orange;
+    background-color:rgb(255, 240, 211);
+}
 
 
 

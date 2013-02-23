@@ -5,6 +5,14 @@ Created on 2.7.2012
 
 '''
 
+def get_empty_names(fields):
+    """ Get the names of all the fields that have empty string values or None values. """
+    empties = []
+    for key, value in fields.iteritems():
+        if value == None or value == "":
+            empties.append(key)
+    return ", ".join(empties)
+
 def validate_email(email):
     from django.core.validators import validate_email
     from django.core.exceptions import ValidationError

@@ -28,7 +28,6 @@ def settings(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.POST:
         filtermode = request.POST.get('filter', None)
-        print filtermode
         profile.filtermode = 0 if filtermode == "verified" else 1
         profile.save()
         return render_to_response("settings.html", createTemplateData({"message" : "Settings saved.", "filter" : profile.filtermode}), context_instance=RequestContext(request))

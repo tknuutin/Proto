@@ -13,7 +13,6 @@ PURGE_THRESHOLD = 1800 #30 minutes for a session to get old
 
 ERRORS_SINCE_START = 0
 LAST_ERROR = None
-print "assigning sessions created now!"
 SESSIONS_CREATED = 0
 
 class WebView(object):

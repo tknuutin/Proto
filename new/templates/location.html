@@ -11,6 +11,11 @@
     </div>
     <div id="container">
         <div class="moduleinfo">
+        {% if messages %}
+            {% for message in messages %}
+                <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
         {% if location.id == 0 %}
             <p>Create a new game Location.</p>
         {% else %}
@@ -18,7 +23,6 @@
             <p>Status: {{ location.get_play_status }}</p>
             <p>Owner: {{ location.creator.username }}</p>
         {% endif %}
-        <p class="error">{% if message %}{{ message }}{% endif %}</p>
         <form action="{{ request.path }}" method="post">
             {% csrf_token %}
             <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/></p>
@@ -32,12 +36,13 @@
             {% endif %}
             <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.desc }}{% endif %}</textarea></p>
             <p>
-                <input class="save" type="submit" value="Save"/>
+                <input class="save" type="submit" name="save" value="Save"/>
                 {% if location.id != 0 %}
-                    {% if location.creator.id == user.id %} 
+                    {% if location.creator.id == user.id or user.is_superuser %} 
                         {% if location.play_status == "UN" %} 
-                            <input class="publish" type="button" value="Publish"/>
+                            <input class="publish" type="submit" name="publish" value="Publish"/>
                         {% endif %}
+                        <input class="delete" type="submit" name="delete" value="Delete"/>
                     {% endif %}
                 {% endif %}
             </p>

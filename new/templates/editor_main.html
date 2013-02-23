@@ -12,6 +12,11 @@
     <div id="container">
         <p>Hello, {{user.username}}. Here you can design and publish game modules.</p>
         {% if user.is_superuser %} <p>You are a superuser. Showing absolutely everything.</p>{% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
         <div class="d_element">
             <h2 class="dbtitle">Locations</h2>
             {% if locations %}

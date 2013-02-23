@@ -59,15 +59,16 @@ class DBGameModule(models.Model):
     hidden = models.BooleanField(default=False)
     players_count = models.IntegerField(default=0, blank=False)
     
+    @classmethod
+    def save_from_request(cls, request, fields, moduleid=None):
+        raise NotImplementedError("Save method for class %d not implemented" % (cls.__name__))
+    
     def is_editable(self, user):
         if (self.design_status == "AL" \
             or (self.design_status == "OW" \
                 and user.id == self.creator.id)) \
         and not self.hidden \
         or user.is_superuser:
-            print user.is_superuser
-            print self.design_status
-            print self.creator.id, user.id
             return True
         else:
             return False
@@ -144,11 +145,31 @@ class DBLocation(DBGameModule):
     desc = models.TextField()
     ftdesc = models.TextField(null=True, blank=True)
     
+    @classmethod
+    def get_simple_name(self): return "location"
+    
     def get_absolute_url(self):
         return "/proto/editor/location/" + str(self.id)
     
     def __unicode__(self):
         return self.name
+    
+    @classmethod
+    def save_from_request(cls, request, fields, moduleid=None):
+        print "asf:", cls.__name__, fields["name"], fields["game"]
+        if not cls.objects.filter(name=fields["name"], game=fields["game"]).exists() and not moduleid:
+            newloc = cls(**fields)
+            newloc.save()
+            return True, "Succesfully created new Location.", newloc.id
+        else:
+            oldloc = cls.objects.get(id=moduleid)
+            if oldloc.is_editable(request.user) and not cls.objects.filter(name=fields["name"], game=fields["game"]).exclude(id=moduleid).exists():
+                for field, value in fields.iteritems():
+                    setattr(oldloc, field, value)
+                oldloc.save()
+                return True, "Succesfully saved changes to Location.", oldloc.id
+            else:
+                return False, "Location with that name already exists for the specified game.", moduleid
     
 class LocationVisited(models.Model):
     session = models.ForeignKey(DBSession)
