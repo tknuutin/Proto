@@ -16,6 +16,7 @@
                 <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
             {% endfor %}
         {% endif %}
+        <div class="helpbox"><p>Help text goes here!</p></div>
         {% if location.id == 0 %}
             <p>Create a new game Location.</p>
         {% else %}
@@ -23,18 +24,19 @@
             <p>Status: {{ location.get_play_status }}</p>
             <p>Owner: {{ location.creator.username }}</p>
         {% endif %}
+        
         <form action="{{ request.path }}" method="post">
             {% csrf_token %}
-            <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/></p>
-            <p>Location name:<input class="module line" type="text" name="name" value="{{ location.name }}" autocomplete="off"/></p>
-            <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea></p>
-            <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea></p>
+            <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/><span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span></p>
+            <p>Location name:<input class="module line" type="text" name="name" value="{{ location.name }}" autocomplete="off"/><span class="element_helptext" style="display: none">Location name: A short unique name for the location. It will be visible to the player. Something like "Bob's bathroom" or whatever.</span></p>
+            <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea><span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span></p>
+            <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea><span class="element_helptext" style="display: none">Default description: Description when entering the location.</span></p>
             {% if location.id != 0 %}
                 <p>List of features here.</p>
             {% else %}
                 <p>Save the Location to add features.</p>
             {% endif %}
-            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.desc }}{% endif %}</textarea></p>
+            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.desc }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
             <p>
                 <input class="save" type="submit" name="save" value="Save"/>
                 {% if location.id != 0 %}
