@@ -82,6 +82,15 @@ class DBGameModule(models.Model):
         else:
             return False
         
+    def is_usable_in_editor(self, user):
+        if (self.design_status == "AL" \
+            or self.design_status == "OW") \
+        and not self.hidden \
+        or user.is_superuser:
+            return True
+        else:
+            return False
+        
     def is_playable(self, settings=None):
         #TODO: settings
         if self.play_status == "VE" or self.play_status == "PU":

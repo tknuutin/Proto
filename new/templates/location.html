@@ -2,6 +2,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="/static/common.css" />
 <link rel="stylesheet" type="text/css" href="/static/editor_module.css" />
+<link rel="stylesheet" href="/static/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
 {% endblock %}
 {% block content %}
             <li id="nav_game"><a href="/proto/">Back to game</a></li>
@@ -32,9 +33,32 @@
             <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea><span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span></p>
             <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea><span class="element_helptext" style="display: none">Default description: Description when entering the location.</span></p>
             {% if location.id != 0 %}
+                {% if location.locationto.all or location.locationfrom.all %}
+                <table id="connections">
+                    <th>Connecting location</th><th>Creator</th><th>Status</th><th></th>
+                    {% for conn in location.locationfrom.all %}
+                    <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
+                        <td data-id="{{ conn.locto.id }}">{{ conn.locto.name }}</td>
+                        <td class="connection_owner" data-owner-id="{{ conn.locto.creator.id }}">{{ conn.locto.creator.username }}</td>
+                        <td>{{ conn.locto.get_play_status }}</td>
+                        <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+                    </tr>
+                    {% endfor %}
+                    {% for conn in location.locationto.all %}
+                    <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
+                        <td data-id="{{ conn.locfrom.id }}">{{ conn.locfrom.name }}</td>
+                        <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
+                        <td>{{ conn.locfrom.get_play_status }}</td>
+                        <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% else %}<div class="d_element_empty"><p class="info">No Connections for this Location yet.</p></div>
+                {% endif %}
+                <input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>
                 <p>List of features here.</p>
             {% else %}
-                <p>Save the Location to add features.</p>
+                <p>Save the Location to add features and connections.</p>
             {% endif %}
             <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.desc }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
             <p>
@@ -52,9 +76,21 @@
             </p>
         </form>
     </div>
+    <div id="hiddenelements" style="display: none;">
+        <table>
+            <tr class="connection">
+                <td class="locationname"></td>
+                <td class="connection_owner"></td>
+                <td class="locationstatus"></td>
+                <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+            </tr>
+        </table>
+    </div>
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript" src="/static/common.js"></script>
 <script type="text/javascript" src="/static/editor_main.js"></script>
+<script type="text/javascript" src="/static/location.js"></script>
 {% endblock %}

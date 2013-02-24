@@ -119,6 +119,10 @@ def module_unpublish(request, cls, moduleid):
         messages.error("Module not found.")
         return HttpResponseRedirect(reverse("editor-main"))
         
+@login_required
+def selector(request, moduletype, rownum):
+    filtered = [loc for loc in DBLocation.objects.all() if loc.is_usable_in_editor(request.user)]
+    return render_to_response(moduletype + "_select.html", createTemplateData({"locations": filtered}), context_instance=RequestContext(request))
 
 @login_required  
 def location(request, locationid=None): 

@@ -1,0 +1,26 @@
+{% extends "select.html" %}
+{% block content %}
+    {% if locations %}
+    <table id="select_content">
+        <th>Name</th><th>Date created</th><th>Status</th><th>Creator</th><th></th>
+        {% for loc in locations %}
+        <tr data-rownum="{{ forloop.counter }}">
+            <td data-id="{{ loc.id }}">{{ loc.getUnicode }}</td>
+            <td data-id="{{ loc.id }}">{{ loc.date_created }}</td>
+            <td data-id="{{ loc.id }}">{{ loc.get_play_status }}</td>
+            <td data-id="{{ loc.id }}">{{ loc.creator.username }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}<div class="d_element_empty"><p class="info">No areas found.</p></div>
+    {% endif %}
+    <form>
+        <input type="button" value="Select" id="select_submit" />
+    </form>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/location_select.js"></script>
+{% endblock %}

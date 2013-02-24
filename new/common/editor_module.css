@@ -23,7 +23,7 @@ h2{
 input{
     border:1px solid silver;
 }
-input[type="submit"]:hover{
+input[type="submit"]:hover, input[type="button"]:hover{
     background-color:#C7C7C7;
 }
 input[type="text"]{
@@ -40,4 +40,14 @@ textarea{
     border-radius:8px;
     padding:5px;
     font-size:0.8em;
+}
+
+table, td{
+    border:0px solid black;
+}
+td{
+    padding:5px;
+}
+th{
+    padding-right:10px;
 }
