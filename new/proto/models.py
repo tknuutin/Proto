@@ -174,7 +174,6 @@ class DBLocation(DBGameModule):
     
     @classmethod
     def save_from_request(cls, request, fields, moduleid=None):
-        print "asf:", cls.__name__, fields["name"], fields["game"]
         if not cls.objects.filter(name=fields["name"], game=fields["game"]).exists() and not moduleid:
             newloc = cls(**fields)
             newloc.save()
@@ -183,7 +182,14 @@ class DBLocation(DBGameModule):
             oldloc = cls.objects.get(id=moduleid)
             if oldloc.is_editable(request.user) and not cls.objects.filter(name=fields["name"], game=fields["game"]).exclude(id=moduleid).exists():
                 for field, value in fields.iteritems():
+                    print "setting field %s of %s to %s" % (field, oldloc.name, value)
                     setattr(oldloc, field, value)
+                    
+                conn_save_success, msg = Connection.save_from_request(request, oldloc)
+                if not conn_save_success: return False, msg, oldloc.id
+                conn_delete_success, msg = Connection.delete_from_request(request, oldloc)
+                if not conn_delete_success: return False, msg, oldloc.id
+                
                 oldloc.save()
                 return True, "Succesfully saved changes to Location.", oldloc.id
             else:
@@ -197,6 +203,39 @@ class Connection(models.Model):
     locfrom = models.ForeignKey(DBLocation, related_name="locationfrom")
     locto = models.ForeignKey(DBLocation, related_name="locationto")
     twoway = models.BooleanField(default=True)
+    
+    @classmethod
+    def save_from_request(cls, request, locationfrom):
+        counter = 1
+        
+        print "is nc_1 in post? " + str("nc_" + str(counter) in request.POST)
+        while "nc_" + str(counter) in request.POST:
+            loctoid = request.POST["nc_" + str(counter)]
+            if DBLocation.objects.filter(id=loctoid).exists():
+                if locationfrom.is_editable(request.user):
+                    newconn = Connection(locfrom=locationfrom, locto=DBLocation.objects.get(id=loctoid))
+                    newconn.save()
+                    counter += 1
+                else:
+                    return False, "Not authorized to add a Connection here."
+            else:
+                return False, "Invalid Connection id."
+        return True, ""
+    
+    @classmethod
+    def delete_from_request(cls, request, locationfrom):
+        counter = 1
+        while "rc_" + str(counter) in request.POST:
+            connid = request.POST["rc_" + str(counter)]
+            if Connection.objects.filter(id=connid).exists():
+                if locationfrom.is_editable(request.user):
+                    Connection.objects.filter(id=connid).delete()
+                    counter += 1
+                else:
+                    return False, "Not authorized to remove Connection."
+            else:
+                return False, "Invalid Connection id."
+        return True, ""
     
     def __unicode__(self):
         return self.locfrom.name + " to " + self.locto.name + " (twoway)" if self.twoway else ""

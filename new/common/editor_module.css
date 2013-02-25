@@ -51,3 +51,6 @@ td{
 th{
     padding-right:10px;
 }
+.nodisplay{
+    display:none;
+}

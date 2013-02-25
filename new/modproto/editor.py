@@ -13,7 +13,7 @@ from django.template import RequestContext
 from views import createTemplateData
 from utilities import wrapTags, wrapTagsWithInnerData, get_empty_names
 from django.contrib.auth.decorators import login_required
-from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfile, DBGame
+from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfile, DBGame, Connection
 
 from django.shortcuts import render_to_response, redirect
 
@@ -30,7 +30,7 @@ class NullModule(object):
 def editor_error(request, template, message):
     """ Display editor error. """
     messages.error(message)
-    return render_to_response(template, createTemplateData({"location": NullModule()}), context_instance=RequestContext(request))
+    return render_to_response(template, createTemplateData({"location": NullModule(), "user_can_edit_module" : False}), context_instance=RequestContext(request))
 
 def get_fields_from_request(request, fieldnames=tuple(), mandatoryfields=tuple()):
     fields = {}
@@ -58,14 +58,13 @@ def module_save(request, cls, fieldnames, mandatoryfields, moduleid=None):
     fieldsok, fields, message = get_fields_from_request(request, fieldnames=fieldnames, mandatoryfields=mandatoryfields)
     if fieldsok:
         if not UserProfile.objects.get(user=request.user).disabled:
-            print "moduleid in module_save: " + str(moduleid)
             savesuccess, savemsg, created_id = cls.save_from_request(request, fields, moduleid=moduleid)
             if savesuccess:
                 messages.success(request, savemsg)
                 return HttpResponseRedirect(DOMAIN + reverse("location-edit", args=(created_id,)))
             else:
                 messages.error(request, savemsg)
-                return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): NullModule(fields)}), context_instance=RequestContext(request)) 
+                return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): NullModule(fields), "user_can_edit_module" : False}), context_instance=RequestContext(request)) 
         else:
             return editor_error(request, cls.get_simple_name() + ".html", "Error: User account disabled.")
     else:
@@ -82,7 +81,7 @@ def module_delete(request, cls, moduleid):
             return HttpResponseRedirect(DOMAIN + reverse("editor-main"))
         else:
             messages.error("You are not authorized to delete this module.")
-            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module, "user_can_edit_module" : False}), context_instance=RequestContext(request))
     else:
         messages.error("Module not found.")
         return HttpResponseRedirect(reverse("editor-main"))
@@ -95,10 +94,10 @@ def module_publish(request, cls, moduleid):
             module.publish()
             module.save()
             messages.success(request, "Succesfully published " + cls.get_simple_name().capitalize())
-            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module, "user_can_edit_module" : True}), context_instance=RequestContext(request))
         else:
             messages.error("You are not authorized to publish this module.")
-            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module, "user_can_edit_module" : False}), context_instance=RequestContext(request))
     else:
         messages.error("Module not found.")
         return HttpResponseRedirect(reverse("editor-main"))
@@ -111,16 +110,16 @@ def module_unpublish(request, cls, moduleid):
             module.unpublish()
             module.save()
             messages.success(request, "Succesfully unpublished " + cls.get_simple_name().capitalize())
-            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module, "user_can_edit_module" : True}), context_instance=RequestContext(request))
         else:
             messages.error("You are not authorized to unpublish this module.")
-            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module}), context_instance=RequestContext(request))
+            return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): module, "user_can_edit_module" : False}), context_instance=RequestContext(request))
     else:
         messages.error("Module not found.")
         return HttpResponseRedirect(reverse("editor-main"))
         
 @login_required
-def selector(request, moduletype, rownum):
+def selector(request, moduletype):
     filtered = [loc for loc in DBLocation.objects.all() if loc.is_usable_in_editor(request.user)]
     return render_to_response(moduletype + "_select.html", createTemplateData({"locations": filtered}), context_instance=RequestContext(request))
 
@@ -128,6 +127,7 @@ def selector(request, moduletype, rownum):
 def location(request, locationid=None): 
     """ Editor Location form. """
     if request.POST:
+        print "request.POST: " + str(request.POST)
         if "save" in request.POST:
             return module_save(request, DBLocation, 
                                fieldnames=(("adminname", "editorname"), "name", "ftdesc", "desc", "notes"),
@@ -145,7 +145,7 @@ def location(request, locationid=None):
         if locationid.isdigit() and DBLocation.objects.filter(id=int(locationid)).exists():
             oldlocation = DBLocation.objects.filter(id=int(locationid))[0]
             if oldlocation.is_editable(request.user):
-                return render_to_response("location.html", createTemplateData({"location": oldlocation}), context_instance=RequestContext(request))
+                return render_to_response("location.html", createTemplateData({"location": oldlocation, "user_can_edit_module" : True}), context_instance=RequestContext(request))
             else:
                 messages.error(request, "Not editable by you.")
         else:

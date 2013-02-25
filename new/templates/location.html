@@ -26,22 +26,21 @@
             <p>Owner: {{ location.creator.username }}</p>
         {% endif %}
         
-        <form action="{{ request.path }}" method="post">
+        <form id="mainform" action="{{ request.path }}" method="post">
             {% csrf_token %}
             <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/><span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span></p>
             <p>Location name:<input class="module line" type="text" name="name" value="{{ location.name }}" autocomplete="off"/><span class="element_helptext" style="display: none">Location name: A short unique name for the location. It will be visible to the player. Something like "Bob's bathroom" or whatever.</span></p>
             <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea><span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span></p>
             <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea><span class="element_helptext" style="display: none">Default description: Description when entering the location.</span></p>
             {% if location.id != 0 %}
-                {% if location.locationto.all or location.locationfrom.all %}
-                <table id="connections">
+                <table id="connections" {% if not location.locationto.all and not location.locationfrom.all %}style="display:none;"{% endif %}>
                     <th>Connecting location</th><th>Creator</th><th>Status</th><th></th>
                     {% for conn in location.locationfrom.all %}
                     <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
                         <td data-id="{{ conn.locto.id }}">{{ conn.locto.name }}</td>
-                        <td class="connection_owner" data-owner-id="{{ conn.locto.creator.id }}">{{ conn.locto.creator.username }}</td>
+                        <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
                         <td>{{ conn.locto.get_play_status }}</td>
-                        <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+                        <td>{% if user_can_edit_module %}<input type="button" class="removebutton" name="removeconnection" value="Delete"/>{% endif %}</td>
                     </tr>
                     {% endfor %}
                     {% for conn in location.locationto.all %}
@@ -49,31 +48,32 @@
                         <td data-id="{{ conn.locfrom.id }}">{{ conn.locfrom.name }}</td>
                         <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
                         <td>{{ conn.locfrom.get_play_status }}</td>
-                        <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+                        <td></td>
                     </tr>
                     {% endfor %}
                 </table>
-                {% else %}<div class="d_element_empty"><p class="info">No Connections for this Location yet.</p></div>
-                {% endif %}
-                <input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>
+                <div class="d_element_empty" {% if location.locationto.all or location.locationfrom.all %}style="display:none;"{% endif %}><p class="info">No Connections for this Location yet.</p></div>
+                {% if user_can_edit_module %}<input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>{% endif %}
                 <p>List of features here.</p>
             {% else %}
                 <p>Save the Location to add features and connections.</p>
             {% endif %}
-            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.desc }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
-            <p>
-                <input class="save" type="submit" name="save" value="Save"/>
-                {% if location.id != 0 %}
-                    {% if location.creator.id == user.id or user.is_superuser %} 
-                        {% if location.play_status == "UN" %} 
-                            <input class="publish" type="submit" name="publish" value="Publish"/>
-                        {% else %}
-                            <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
+            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.notes }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
+            {% if location.id == 0 or user_can_edit_module %}
+                <p>
+                    <input class="save" type="submit" name="save" value="Save"/>
+                    {% if location.id != 0 %}
+                        {% if location.creator.id == user.id or user.is_superuser %} 
+                            {% if location.play_status == "UN" %} 
+                                <input class="publish" type="submit" name="publish" value="Publish"/>
+                            {% else %}
+                                <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
+                            {% endif %}
+                            <input class="delete" type="submit" name="delete" value="Delete"/>
                         {% endif %}
-                        <input class="delete" type="submit" name="delete" value="Delete"/>
                     {% endif %}
-                {% endif %}
-            </p>
+                </p>
+            {% endif %}
         </form>
     </div>
     <div id="hiddenelements" style="display: none;">
