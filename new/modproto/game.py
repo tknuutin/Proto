@@ -76,17 +76,17 @@ class Event(object):
         self.dbid = dbid
         self.failevent = failevent
         
-    def has_triggered(self, sessionid):
+    def has_triggered(self, session):
         """ Checks whether this Event has triggered for this game Session yet. """
         try:
-            models.EventTriggered.objects.get(session__id=sessionid, event__id=self.dbid)
+            models.EventTriggered.objects.get(session__id=session.id, event__id=self.dbid)
             return True
         except ObjectDoesNotExist:
             return False
         
     def trigger(self, game):
         """ Trigger the effects of the Event to the Game object. """
-        if self.has_triggered(game.sessionid):
+        if self.has_triggered(game.session):
             return True
         elif not self.condition or self.condition.passes(game):
             if self.desc:
@@ -101,7 +101,7 @@ class Event(object):
                 elif self.mode == self.MODE_MULTI:
                     game.multiply_variable(self.variable, self.amount)
             
-            models.EventTriggered(session=models.DBSession.objects.get(id=game.sessionid), event=models.DBEvent.objects.get(id=self.dbid)).save()
+            models.EventTriggered(session=game.session, event=models.DBEvent.objects.get(id=self.dbid)).save()
             return True
         else:
             if self.failevent: self.failevent.trigger()
@@ -158,13 +158,11 @@ class Location(Feature):
         """ Trigger location, for example when entering the area or loading game to area. """
         game.send_text("You are in " + self.name.upper() + ".")
         
-        try:
-            models.LocationVisited.objects.get(session__id=game.sessionid, location__id=self.dbid)
+        if models.LocationVisited.objects.filter(session__id=game.session.id, location__id=self.dbid).exists():
             self.trigger(game)
-        except ObjectDoesNotExist:
+        else:
             game.send_text(self.ftdesc)
-            print "trying to get DBSession with id: " + str(game.sessionid)
-            models.LocationVisited(session=models.DBSession.objects.get(id=game.sessionid), location=models.DBLocation.objects.get(id=self.dbid))
+            models.LocationVisited(session=game.session, location=models.DBLocation.objects.get(id=self.dbid)).save()
             self.trigger(game, show_description=False)
         
         connectionnames = [connection.upper() for connection in self.connections.iterkeys()]
@@ -175,6 +173,16 @@ class Location(Feature):
 
 class DBInterface(object):
     """ Database interface controller. """
+    def __init__(self, verified_only=True):
+        self.verified_only = verified_only
+        
+    def filter_by_play_status(self, results):
+        if self.verified_only: 
+            results.filter(play_status__exact="VE")
+        else:
+            results.filter(Q(play_status__exact="VE") | Q(play_status__exact="PU"))
+        return results
+    
     def get_condition(self, uid=None, dbobject=None):
         dbcondition = dbobject or models.DBCondition.objects.get(id=uid)
         return Condition(dbcondition.variable, dbcondition.mode, other=dbcondition.other, number=dbcondition.number)
@@ -193,7 +201,7 @@ class DBInterface(object):
         dbfeat = dbobject or models.DBFeature.objects.get(id=uid)
         feat = Feature(dbfeat.name).set_description(dbfeat.desc)
         
-        for dbevent in models.DBEvent.objects.filter(module__id=dbfeat.id):
+        for dbevent in self.filter_by_play_status(models.DBEvent.objects.filter(module__id=dbfeat.id)):
             feat.add_event(self.get_event(dbobject=dbevent))
             
         return feat
@@ -202,29 +210,36 @@ class DBInterface(object):
         dbloc = dbobject or models.DBLocation.objects.get(id=uid)
         loc = Location(dbloc.name, dbloc.id).set_description(dbloc.desc).add_ftdesc(dbloc.ftdesc)
         
-        for dbevent in models.DBEvent.objects.filter(featureowner__id=dbloc.id):
+        for dbevent in self.filter_by_play_status(models.DBEvent.objects.filter(featureowner__id=dbloc.id)):
             loc.add_event(self.get_event(dbobject=dbevent))
-            
-        for dbconnection in models.Connection.objects.filter(Q(locfrom__id=dbloc.id) | Q(locto__id=dbloc.id)):
-            if dbloc.name.lower() == dbconnection.locfrom.name.lower():
+        
+        dbconns = models.Connection.objects.filter(Q(locfrom__id=dbloc.id) | Q(locto__id=dbloc.id))
+        if self.verified_only:
+            dbconns = dbconns.filter(locfrom__play_status__exact="VE")
+        else:
+            dbconns = dbconns.filter(Q(locfrom__play_status__exact="VE") | Q(locfrom__play_status__exact="PU"))
+        
+        for dbconnection in dbconns:
+            if dbloc.id == dbconnection.locfrom.id:
                 loc.add_connection(dbconnection.locto.name, dbconnection.locto.id)
             else:
                 loc.add_connection(dbconnection.locfrom.name, dbconnection.locfrom.id)
                 
-        for dbfeature in models.DBFeature.objects.filter(featureowner__id=dbloc.id):
+        for dbfeature in self.filter_by_play_status(models.DBFeature.objects.filter(featureowner__id=dbloc.id)):
             loc.add_feature(self.get_feature(dbobject=dbfeature))
             
         return loc
         
 class Game(object):
     """ """
-    def __init__(self, name, sessionid):
+    def __init__(self, name, session, user):
         self.playername = name
-        self.sessionid = sessionid
+        self.session = session
+        self.user = user
         self.text_buffer = []
         self.variables = {}
         self.current_location = None
-        self.db = DBInterface()
+        self.db = DBInterface(not bool(models.UserProfile.objects.get(user=user).filtermode))
         
     def default_start(self):
         self.text_buffer.append("You decide your name is " + self.playername.upper() + ". A rather stupid name, but that's the one you chose. No point berating yourself about it a second after you come up with it.")
@@ -238,7 +253,7 @@ class Game(object):
     
     def pop_buffer(self):
         #TODO: remove debug print
-        print "current variables: " + str(self.variables)
+        #print "current variables: " + str(self.variables)
         returnable = self.text_buffer
         self.text_buffer = []   
         return returnable

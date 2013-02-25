@@ -49,13 +49,13 @@ class WebView(object):
 
 class Session():
     """ Container for the DBSession and other objects. """
-    def __init__(self, name):
+    def __init__(self, name, user):
         self.uid = str(uuid.uuid4().hex)
         dbsession = models.DBSession()
         dbsession.save()
         self.dbid = dbsession.id
         
-        game = protogame.Game(name, self.dbid)
+        game = protogame.Game(name, dbsession, user)
         self.view = WebView(game)
         self.last_update = datetime.datetime.now()
         
@@ -80,10 +80,10 @@ def create_logfile(session, folderName, command, exception):
     LAST_ERROR = datetime.datetime.now()
 
 
-def new_session(player_name):
+def new_session(player_name, user):
     """ Create a new session with the given player name. Returns a HttpResponse with the game info and id. """
     global SESSIONS_CREATED
-    session = Session(str(player_name).capitalize())
+    session = Session(str(player_name).capitalize(), user)
     uid = session.uid
     session_dict[uid] = session
     SESSIONS_CREATED += 1

@@ -99,7 +99,7 @@ def play(request):
         command = request.GET.get("command", default="something")
         
         if uid == "0":
-            return sessions.new_session(command)
+            return sessions.new_session(command, request.user)
         else:
             return sessions.update_session(command, uid)
     else:
