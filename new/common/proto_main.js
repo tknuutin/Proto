@@ -78,4 +78,39 @@ $(document).ready(function(){
     var cval = ginput.val();
     ginput.focus().val(cval);
     
+    var navigation = $("#navigation");
+    var navenable = $("#navigationtoggle .enabled");
+    var navdisable = $("#navigationtoggle .disabled");
+    var navtoggle = $("#navigationtoggle");
+    var navigationhover = $("#navigationhover");
+    navdisable.show();
+    var navdisabled = false;
+    setHandHover(navtoggle);
+    
+    navtoggle.click(function(){
+        if(navdisabled){
+            navigation.show();
+            navigationhover.unbind('mouseenter mouseleave');
+            navdisabled = false;
+            navenable.hide();
+            navdisable.show();
+        }
+        else{
+            navigation.hide();
+            navigationhover.hover(
+                function(){ 
+                    navtoggle.show(); 
+                },
+                function(){ 
+                    navtoggle.hide();
+                }
+            );
+            navenable.show();
+            navdisable.hide();
+            navdisabled = true;
+        }
+    });
+    
+    
+    
 });

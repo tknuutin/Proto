@@ -4,12 +4,12 @@
 <link rel="stylesheet" type="text/css" href="/static/editor_module.css" />
 <link rel="stylesheet" href="/static/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
 {% endblock %}
+{% block navigation %}
+    <li id="nav_game"><a href="/proto/">Back to game</a></li>
+    <li id="nav_editor" class="selected"><a href="/proto/editor/">Editor main</a></li>
+    <li id="nav_tutorials"><a>Tutorials</a></li>
+{% endblock %}
 {% block content %}
-            <li id="nav_game"><a href="/proto/">Back to game</a></li>
-            <li id="nav_editor" class="selected"><a href="/proto/editor/">Editor main</a></li>
-            <li id="nav_tutorials"><a>Tutorials</a></li>
-        </ul>
-    </div>
     <div id="container">
         <div class="moduleinfo">
         {% if messages %}
@@ -33,27 +33,29 @@
             <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea><span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span></p>
             <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea><span class="element_helptext" style="display: none">Default description: Description when entering the location.</span></p>
             {% if location.id != 0 %}
-                <table id="connections" {% if not location.locationto.all and not location.locationfrom.all %}style="display:none;"{% endif %}>
-                    <th>Connecting location</th><th>Creator</th><th>Status</th><th></th>
-                    {% for conn in location.locationfrom.all %}
-                    <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
-                        <td data-id="{{ conn.locto.id }}">{{ conn.locto.name }}</td>
-                        <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
-                        <td>{{ conn.locto.get_play_status }}</td>
-                        <td>{% if user_can_edit_module %}<input type="button" class="removebutton" name="removeconnection" value="Delete"/>{% endif %}</td>
-                    </tr>
-                    {% endfor %}
-                    {% for conn in location.locationto.all %}
-                    <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
-                        <td data-id="{{ conn.locfrom.id }}">{{ conn.locfrom.name }}</td>
-                        <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
-                        <td>{{ conn.locfrom.get_play_status }}</td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                <div class="d_element_empty" {% if location.locationto.all or location.locationfrom.all %}style="display:none;"{% endif %}><p class="info">No Connections for this Location yet.</p></div>
-                {% if user_can_edit_module %}<input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>{% endif %}
+                <p>
+                    <table id="connections" {% if not location.locationto.all and not location.locationfrom.all %}style="display:none;"{% endif %}>
+                        <th>Connecting location</th><th>Creator</th><th>Status</th><th></th>
+                        {% for conn in location.locationfrom.all %}
+                        <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
+                            <td data-id="{{ conn.locto.id }}">{{ conn.locto.name }}</td>
+                            <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
+                            <td>{{ conn.locto.get_play_status }}</td>
+                            <td>{% if user_can_edit_module %}<input type="button" class="removebutton" name="removeconnection" value="Delete"/>{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for conn in location.locationto.all %}
+                        <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
+                            <td data-id="{{ conn.locfrom.id }}">{{ conn.locfrom.name }}</td>
+                            <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
+                            <td>{{ conn.locfrom.get_play_status }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="d_element_empty" {% if location.locationto.all or location.locationfrom.all %}style="display:none;"{% endif %}><p class="info">No Connections for this Location yet.</p></div>
+                    {% if user_can_edit_module %}<input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>{% endif %}
+                </p>
                 <p>List of features here.</p>
             {% else %}
                 <p>Save the Location to add features and connections.</p>

@@ -55,7 +55,7 @@ class Session():
         dbsession.save()
         self.dbid = dbsession.id
         
-        game = protogame.Game(name, dbsession, user)
+        game = protogame.Game(name, dbsession, user=(user if user.is_authenticated() else None))
         self.view = WebView(game)
         self.last_update = datetime.datetime.now()
         

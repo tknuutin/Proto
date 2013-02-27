@@ -10,15 +10,26 @@
         {% endblock %}
 	</head>
 <body>
-    <div id="navigation">
-        <ul>
+    <div id="navigationhover">
+        <div id="navigationtoggle"><img style="display:none;" class="disabled" src="/static/greendownarrow.png"/><img style="display:none;" class="enabled" src="/static/greenrightarrow.png"/></div>
+        <div id="navigation">
+            <ul>
+            {% block navigation %}
+            {% endblock %}
             {% if user.is_authenticated %}
                 <li class="login"><a href="/logout.html">Log out</a></li>
             {% else %}
                 <li class="login"><a href="/login.html">Log in</a></li>
             {% endif %}
+            </ul>
+            {% if user.is_authenticated %}
+                <p class="logged_in">Logged in as {{ user.username }}.</p>
+            {% endif %}
+        </div>
+    </div>
     {% block content %}
     {% endblock %}
+    
 </body>
 {% block scripts %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

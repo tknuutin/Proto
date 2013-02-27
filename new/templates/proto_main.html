@@ -4,14 +4,14 @@
 <link rel="stylesheet" type="text/css" href="/static/common.css" />
 <link rel="stylesheet" type="text/css" href="/static/proto_main.css" />
 {% endblock %}
+{% block navigation %}
+    <li id="nav_game" class="selected"><a>Game</a></li>
+    <li id="nav_about"><a>About</a></li>
+    <li id="nav_help"><a>Help!</a></li>
+    {% if user.is_authenticated %}<li id="nav_settings"><a href="settings.html">Settings</a></li>{% endif %}
+    <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
+{% endblock %}
 {% block content %}
-            <li id="nav_game" class="selected"><a>Game</a></li>
-            <li id="nav_about"><a>About</a></li>
-            <li id="nav_help"><a>Help!</a></li>
-            {% if user.is_authenticated %}<li id="nav_settings"><a href="settings.html">Settings</a></li>{% endif %}
-            <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
-        </ul>
-    </div>
     <div id="container">
         <div id="about" style="display: none;">
             <p>MODME is a game about exploring text-based universes filled with bad jokes and surreal vistas. In MODME, the player can expand his universe by adding pieces to it. You can do that with "Add content" button off to the side, incase you're wondering.</p>

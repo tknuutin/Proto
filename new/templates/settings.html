@@ -5,12 +5,12 @@
 <link rel="stylesheet" type="text/css" href="/static/proto_main.css" />
 <link rel="stylesheet" type="text/css" href="/static/settings.css" />
 {% endblock %}
+{% block navigation %}
+    <li id="nav_game" ><a href="/proto/">Game</a></li>
+    <li id="nav_settings" class="selected"><a href="settings.html">Settings</a></li>
+    <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
+{% endblock %}
 {% block content %}
-            <li id="nav_game" ><a href="/proto/">Game</a></li>
-            <li id="nav_settings" class="selected"><a href="settings.html">Settings</a></li>
-            <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
-        </ul>
-    </div>
     <div id="container">
         {% if message %}<p class="error">{{ message }}</p>{% endif %}
         <form action="settings.html" method="post">{% csrf_token %}

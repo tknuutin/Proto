@@ -5,7 +5,10 @@ body{
 #container, #container input{
     color:green;
 }
-#navigation a{
+#navigation ul{
+    margin-top:0px;
+}
+#navigation a, #navigation p{
     color:green;
     text-decoration:none;
 }
@@ -13,7 +16,7 @@ body{
     background-image: url('/static/greenblock.png');
 }
 #navigation li:hover{
-    background-color:#005701;
+    -webkit-animation: colorPulse 1s infinite;
 }
 #container{
     border: 1px solid black;

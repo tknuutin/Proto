@@ -21,3 +21,12 @@ function setNonSelected(elems){
         this.elem.hide();
     });
 }
+
+$(document).ready(function(){
+    var loggedIn = $("#navigation .logged_in");
+    loggedIn.hide();
+    $("#navigation .login").hover(
+        function(){ loggedIn.show(); },
+        function(){ loggedIn.hide(); }
+    );
+});

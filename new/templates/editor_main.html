@@ -3,12 +3,12 @@
 <link rel="stylesheet" type="text/css" href="/static/common.css" />
 <link rel="stylesheet" type="text/css" href="/static/editor_main.css" />
 {% endblock %}
+{% block navigation %}
+    <li id="nav_game"><a href="/proto/">Back to game</a></li>
+    <li id="nav_editor" class="selected"><a>Editor main</a></li>
+    <li id="nav_tutorials"><a>Tutorials</a></li>
+{% endblock %}
 {% block content %}
-            <li id="nav_game"><a href="/proto/">Back to game</a></li>
-            <li id="nav_editor" class="selected"><a>Editor main</a></li>
-            <li id="nav_tutorials"><a>Tutorials</a></li>
-        </ul>
-    </div>
     <div id="container">
         <p>Hello, {{user.username}}. Here you can design and publish game modules.</p>
         {% if user.is_superuser %} <p>You are a superuser. Showing absolutely everything.</p>{% endif %}
