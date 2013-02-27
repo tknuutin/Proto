@@ -147,7 +147,7 @@ def location(request, locationid=None):
             if oldlocation.is_editable(request.user):
                 return render_to_response("location.html", createTemplateData({"location": oldlocation, "user_can_edit_module" : True}), context_instance=RequestContext(request))
             else:
-                messages.error(request, "Not editable by you.")
+                return render_to_response("location.html", createTemplateData({"location": oldlocation, "user_can_edit_module" : False}), context_instance=RequestContext(request))
         else:
             messages.error(request, "Error: No such Location.")
     return render_to_response("location.html", createTemplateData({"location": NullModule()}), context_instance=RequestContext(request))

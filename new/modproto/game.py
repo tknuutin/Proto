@@ -173,8 +173,9 @@ class Location(Feature):
 
 class DBInterface(object):
     """ Database interface controller. """
-    def __init__(self, verified_only=True):
-        self.verified_only = verified_only
+    def __init__(self, user=None):
+        self.verified_only = (not bool(models.UserProfile.objects.get(user=user).filtermode)) if user else True
+        self.user = user
         
     def filter_by_play_status(self, results):
         if self.verified_only: 
@@ -232,14 +233,14 @@ class DBInterface(object):
         
 class Game(object):
     """ """
-    def __init__(self, name, session, user):
+    def __init__(self, name, session, user=None):
         self.playername = name
         self.session = session
         self.user = user
         self.text_buffer = []
         self.variables = {}
         self.current_location = None
-        self.db = DBInterface(not bool(models.UserProfile.objects.get(user=user).filtermode))
+        self.db = DBInterface(user=user)
         
     def default_start(self):
         self.text_buffer.append("You decide your name is " + self.playername.upper() + ". A rather stupid name, but that's the one you chose. No point berating yourself about it a second after you come up with it.")
