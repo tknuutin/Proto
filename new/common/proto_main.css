@@ -2,6 +2,10 @@ body{
     background-color:black;
 }
 
+#navigationtoggle:hover{
+    -webkit-animation: colorPulse 1s infinite;
+}
+
 #container, #container input{
     color:green;
 }

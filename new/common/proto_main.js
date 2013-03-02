@@ -66,12 +66,6 @@ $(document).ready(function(){
                  
     $.each(elems, function(){
         setHandHover(this.navelem);
-        var obj = this;
-        obj.navelem.click(function(){
-            setNonSelected(elems);
-            obj.navelem.addClass("selected");
-            obj.elem.show();
-        });
     });
     
     var ginput = $("#game_input input")

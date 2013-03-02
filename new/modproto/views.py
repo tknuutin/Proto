@@ -23,6 +23,9 @@ def createTemplateData(add=None):
         BASIC_INFO.update(add)
     return BASIC_INFO
 
+def about(request):
+    return render_to_response("about.html", createTemplateData(), context_instance=RequestContext(request))
+
 @login_required
 def settings(request):
     profile = UserProfile.objects.get(user=request.user)

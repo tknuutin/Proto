@@ -119,7 +119,7 @@ def module_publish(request, cls, moduleid):
 def module_unpublish(request, cls, moduleid):
     if cls.objects.filter(id=moduleid).exists():
         module = cls.objects.get(id=moduleid)
-        if module.is_editable(request.user):
+        if module.is_editable(request.user) and (module.play_status != "VE" or request.user.is_superuser):
             module.unpublish()
             module.save()
             messages.success(request, "Succesfully unpublished " + cls.get_simple_name().capitalize())

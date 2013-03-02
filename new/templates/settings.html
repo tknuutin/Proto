@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "greenbase.html" %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="/static/common.css" />
 <link rel="stylesheet" type="text/css" href="/static/proto_main.css" />
@@ -7,7 +7,8 @@
 {% endblock %}
 {% block navigation %}
     <li id="nav_game" ><a href="/proto/">Game</a></li>
-    <li id="nav_settings" class="selected"><a href="settings.html">Settings</a></li>
+    <li id="nav_about"><a href="/proto/about.html">About</a></li>
+    <li id="nav_settings" class="selected"><a href="/proto/settings.html">Settings</a></li>
     <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
 {% endblock %}
 {% block content %}

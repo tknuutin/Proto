@@ -15,9 +15,6 @@
     padding-left:2px;
     padding-right:2px;
 }
-#navigationtoggle:hover{
-    -webkit-animation: colorPulse 1s infinite;
-}
 
 #container, #container input{
     font-family: 'Anaheim', sans-serif;

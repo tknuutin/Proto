@@ -1,9 +1,30 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8">
-	</head>
-	<body>
-        <p>About text here!</p>
-    </body>
-</html>
+
+{% extends "greenbase.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/proto_main.css" />
+<link rel="stylesheet" type="text/css" href="/static/settings.css" />
+{% endblock %}
+{% block navigation %}
+    <li id="nav_game" ><a href="/proto/">Game</a></li>
+    <li id="nav_about" class="selected"><a href="/proto/about.html">About</a></li>
+    <li id="nav_settings"><a href="/proto/settings.html">Settings</a></li>
+    <li id="nav_content"><a href="/proto/editor/">Add content</a></li>
+{% endblock %}
+{% block content %}
+    <div id="container">
+        {% if message %}<p class="error">{{ message }}</p>{% endif %}
+        <p>MODME is a game about exploring text-based universes filled with bad jokes and surreal vistas. In MODME, the player can expand his universe by adding pieces to it. You can do that with "Add content" button off to the side, incase you're wondering.</p>
+        <p>You are currently playing a prototype version of MODME. It was developed by Tarmo Knuutinen and runs on Python and Django.</p>
+        <p></p>
+        <p>Input commands in the input box next to the >. This is just about all you can do in the game. Try different commands like <i>examine, go to</i>, and so on. Try <i>examine room</i> to see the room details. Also try <i>show stats</i> to see your current stats and other stuff possibly.</p>
+        <p>You might also be able to interact with stuff with various secret commands. Depends on the version you're playing though. Hell I don't know, just try stuff yourself a little bit.</p>
+        
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/proto_main.js"></script>
+<script type="text/javascript" src="/static/settings.js"></script>
+{% endblock %}
