@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/common.css" />
+<link rel="stylesheet" type="text/css" href="/static/editor_module.css" />
+<link rel="stylesheet" href="/static/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+{% endblock %}
+{% block navigation %}
+    <li id="nav_game"><a href="/proto/">Back to game</a></li>
+    <li id="nav_editor" class="selected"><a href="/proto/editor/">Editor main</a></li>
+    <li id="nav_tutorials"><a>Tutorials</a></li>
+{% endblock %}
+{% block content %}
+    <div id="container">
+        <div class="moduleinfo">
+        {% if messages %}
+            {% for message in messages %}
+                <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <div class="helpbox"><p>Help text goes here!</p></div>
+        {% if feature.id == 0 %}
+            <p>Create a new game Feature.</p>
+        {% else %}
+            <p>ID: <span id="moduleid">{{ feature.id }}</span></p>
+            <p>Status: {{ feature.get_play_status }}</p>
+            <p>Owner: {{ feature.creator.username }}</p>
+        {% endif %}
+        
+        <form id="mainform" action="{{ request.path }}" method="post">
+            {% csrf_token %}
+            <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ feature.adminname }}" autocomplete="off"/><span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span></p>
+            <p>Feature name:<input class="module line" type="text" name="name" value="{{ feature.name }}" autocomplete="off"/><span class="element_helptext" style="display: none">The name of the feature shown in game. Should be a simple noun.</span></p>
+            <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ feature.desc }}</textarea><span class="element_helptext" style="display: none">Description: Description when examining the feature.</span></p>
+            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if feature.name %}{{ feature.notes }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
+            {% if feature.id == 0 or user_can_edit_module %}
+                <p>
+                    <input class="save" type="submit" name="save" value="Save"/>
+                    {% if feature.id != 0 %}
+                        {% if feature.creator.id == user.id or user.is_superuser %} 
+                            {% if feature.play_status == "UN" %} 
+                                <input class="publish" type="submit" name="publish" value="Publish"/>
+                            {% else %}
+                                <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
+                            {% endif %}
+                            <input class="delete" type="submit" name="delete" value="Delete"/>
+                        {% endif %}
+                    {% endif %}
+                </p>
+            {% endif %}
+        </form>
+    </div>
+    <div id="hiddenelements" style="display: none;">
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/editor_main.js"></script>
+<script type="text/javascript" src="/static/feature.js"></script>
+{% endblock %}
