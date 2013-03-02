@@ -17,6 +17,22 @@ from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfil
 
 from django.shortcuts import render_to_response, redirect
 
+MODULE_FIELDS = {
+    "location" : {
+        "class" : DBLocation,
+        "fieldnames" : (("adminname", "editorname"), "name", "desc", "notes"), 
+        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("Description", "desc"))
+    },
+    "feature" : {
+        "class" : DBFeature,
+        "fieldnames" : (("adminname", "editorname"), "name", "desc", "notes"), 
+        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("Description", "desc"))        
+    }   
+}
+
+#TODO: refactor
+DOMAIN = "http://www.modme-game.net"
+
 class NullModule(object):
     """ A dummy module for forms which describe a new module. """
     def __init__(self, fields=None):
@@ -48,9 +64,6 @@ def get_fields_from_request(request, fieldnames=tuple(), mandatoryfields=tuple()
     print fields
     return True, fields, "Fields okay."
 
-#TODO: refactor
-DOMAIN = "http://www.modme-game.net"
-
 @login_required
 def module_save(request, cls, fieldnames, mandatoryfields, moduleid=None):
     """ Save generic module based on the request and lists of fields and mandatory fields. Can create a new module or can edit an existing module. """
@@ -61,7 +74,7 @@ def module_save(request, cls, fieldnames, mandatoryfields, moduleid=None):
             savesuccess, savemsg, created_id = cls.save_from_request(request, fields, moduleid=moduleid)
             if savesuccess:
                 messages.success(request, savemsg)
-                return HttpResponseRedirect(DOMAIN + reverse("location-edit", args=(created_id,)))
+                return HttpResponseRedirect(DOMAIN + reverse(cls.get_simple_name() + "-edit", args=(created_id,)))
             else:
                 messages.error(request, savemsg)
                 return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): NullModule(fields), "user_can_edit_module" : False}), context_instance=RequestContext(request)) 
@@ -123,40 +136,42 @@ def selector(request, moduletype):
     filtered = [loc for loc in DBLocation.objects.all() if loc.is_usable_in_editor(request.user)]
     return render_to_response(moduletype + "_select.html", createTemplateData({"locations": filtered}), context_instance=RequestContext(request))
 
-@login_required  
-def location(request, locationid=None): 
-    """ Editor Location form. """
+def module(request, moduletype, moduleid=None):
     if request.POST:
-        print "request.POST: " + str(request.POST)
         if "save" in request.POST:
-            return module_save(request, DBLocation, 
-                               fieldnames=(("adminname", "editorname"), "name", "ftdesc", "desc", "notes"),
-                               mandatoryfields=(("Editor name", "adminname"), ("Name", "name"), ("Description", "desc")),
-                               moduleid=locationid)
+            return module_save(request, MODULE_FIELDS[moduletype]["class"], 
+                               fieldnames=MODULE_FIELDS[moduletype]["fieldnames"], 
+                               mandatoryfields=MODULE_FIELDS[moduletype]["mandatoryfields"],
+                               moduleid=moduleid)
             
         if "delete" in request.POST:
-            return module_delete(request, DBLocation, locationid)
+            return module_delete(request, MODULE_FIELDS[moduletype]["class"], moduleid)
         if "publish" in request.POST:
-            return module_publish(request, DBLocation, locationid)
+            return module_publish(request, MODULE_FIELDS[moduletype]["class"], moduleid)
         if "unpublish" in request.POST:
-            return module_unpublish(request, DBLocation, locationid)
+            return module_unpublish(request, MODULE_FIELDS[moduletype]["class"], moduleid)
         
-    if locationid:
-        if locationid.isdigit() and DBLocation.objects.filter(id=int(locationid)).exists():
-            oldlocation = DBLocation.objects.filter(id=int(locationid))[0]
-            if oldlocation.is_editable(request.user):
-                return render_to_response("location.html", createTemplateData({"location": oldlocation, "user_can_edit_module" : True}), context_instance=RequestContext(request))
+    if moduleid:
+        if moduleid.isdigit() and MODULE_FIELDS[moduletype]["class"].objects.filter(id=int(moduleid)).exists():
+            oldmodule = MODULE_FIELDS[moduletype]["class"].objects.filter(id=int(moduleid))[0]
+            if oldmodule.is_editable(request.user):
+                return render_to_response(moduletype + ".html", createTemplateData({moduletype: oldmodule, "user_can_edit_module" : True}), context_instance=RequestContext(request))
             else:
-                return render_to_response("location.html", createTemplateData({"location": oldlocation, "user_can_edit_module" : False}), context_instance=RequestContext(request))
+                return render_to_response(moduletype + ".html", createTemplateData({moduletype: oldmodule, "user_can_edit_module" : False}), context_instance=RequestContext(request))
         else:
-            messages.error(request, "Error: No such Location.")
-    return render_to_response("location.html", createTemplateData({"location": NullModule()}), context_instance=RequestContext(request))
+            messages.error(request, ("Error: No such %s" % (moduletype.capitalize())))
+    return render_to_response(moduletype + ".html", createTemplateData({moduletype: NullModule()}), context_instance=RequestContext(request))
+
+@login_required  
+def location(request, locationid=None): return module(request, "location", locationid)
+@login_required  
+def feature(request, locationid=None): return module(request, "feature", locationid)
 
 @login_required
 def editor_main(request):
     """ Editor main view. """
     locations = DBLocation.objects.all() if request.user.is_superuser else DBLocation.objects.filter(creator=request.user)
-    events = DBEvent.objects.filter(creator=request.user)
-    features = DBFeature.objects.filter(creator=request.user)
-    conditions = DBCondition.objects.filter(creator=request.user)
+    events = DBEvent.objects.all() if request.user.is_superuser else DBEvent.objects.filter(creator=request.user)
+    features = DBFeature.objects.all() if request.user.is_superuser else DBFeature.objects.filter(creator=request.user)
+    conditions = DBCondition.objects.all() if request.user.is_superuser else DBCondition.objects.filter(creator=request.user)
     return render_to_response("editor_main.html", createTemplateData({"locations": locations, "events" : events, "features" : features, "conditions" : conditions}), context_instance=RequestContext(request))
