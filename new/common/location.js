@@ -1,37 +1,42 @@
 
 removedConnections = [];
 
-function addNewConnection(targetdiv, locationname, locationid){
-    if(targetdiv == "connection"){
-        var existing_connections = [];
-        $("#connections tr:visible").each(function(){
-            existing_connections.push(parseInt($(this).find("td").first().attr("data-id"), 10));
-        });
-        if(existing_connections.indexOf(locationid) < 0 && locationid != parseInt($("#moduleid").text(), 10)){
-            $("#connections").show();
-            $("table + .d_element_empty").hide();
-            
-            var removedLocationIds = [];
-            $.each(removedConnections, function(){ removedLocationIds.push(this.locfrom_id); });
-            
-            var indexOfRemovedLocation = removedLocationIds.indexOf(locationid);
-            if(indexOfRemovedLocation > -1){
-                $("#connections .connection td[data-id=" + locationid + "]").parents(".connection").show();
-                removedConnections.splice(indexOfRemovedLocation, 1);
-            }
-            else{
-                $("#connections tbody").append($("#hiddenelements .connection").clone());
-                var newconn = $("#connections .connection").last();
-                newconn.attr("data-id", "0");
-                newconn.find("td").first().attr("data-id", locationid);
-                newconn.find(".locationname").text(locationname);
-                newconn.find(".locationstatus").text("Unsaved");
-                newconn.find(".removebutton").click(function(){
-                    //TODO: ask confirmation
-                    newconn.remove();
-                    hideConnectionsIfNeeded();
-                });
-            }
+function handleLocationSelect(targetname, locationname, locationid){
+    console.log(targetname);
+    if(targetname == "connection"){
+        addNewConnection(locationname, locationid);
+    }
+}
+
+function addNewConnection(locationname, locationid){
+    var existing_connections = [];
+    $("#connections tr:visible").each(function(){
+        existing_connections.push(parseInt($(this).find("td").first().attr("data-id"), 10));
+    });
+    if(existing_connections.indexOf(locationid) < 0 && locationid != parseInt($("#moduleid").text(), 10)){
+        $("#connections").show();
+        $("table + .d_element_empty").hide();
+        
+        var removedLocationIds = [];
+        $.each(removedConnections, function(){ removedLocationIds.push(this.locfrom_id); });
+        
+        var indexOfRemovedLocation = removedLocationIds.indexOf(locationid);
+        if(indexOfRemovedLocation > -1){
+            $("#connections .connection td[data-id=" + locationid + "]").parents(".connection").show();
+            removedConnections.splice(indexOfRemovedLocation, 1);
+        }
+        else{
+            $("#connections tbody").append($("#hiddenelements .connection").clone());
+            var newconn = $("#connections .connection").last();
+            newconn.attr("data-id", "0");
+            newconn.find("td").first().attr("data-id", locationid);
+            newconn.find(".locationname").text(locationname);
+            newconn.find(".locationstatus").text("Unsaved");
+            newconn.find(".removebutton").click(function(){
+                //TODO: ask confirmation
+                newconn.remove();
+                hideConnectionsIfNeeded();
+            });
         }
     }
 }
@@ -45,7 +50,7 @@ function hideConnectionsIfNeeded(){
 
 $(document).ready(function(){
     $("#connection_create").fancybox({
-        'href' : "/proto/editor/select/location",
+        'href' : "/proto/editor/select/location?target=connection",
         'width' : '500',
         'height' : '350',
         'type' : 'iframe',
