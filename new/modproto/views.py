@@ -87,9 +87,6 @@ def logout_user(request):
     logout(request)
     return render_to_response("login.html", createTemplateData(add={"message" : "You have been logged out."}), context_instance=RequestContext(request))
 
-def about(request):
-    return render_to_response("about.html", createTemplateData(), context_instance=RequestContext(request))
-
 def index(request, templateName="proto_main.html"):
     return render_to_response(templateName, createTemplateData(), context_instance=RequestContext(request))
 
