@@ -178,10 +178,12 @@ class DBInterface(object):
         self.user = user
         
     def filter_by_play_status(self, results):
+        print len(results)
         if self.verified_only: 
-            results.filter(play_status__exact="VE")
+            results = results.filter(play_status__exact="VE")
         else:
-            results.filter(Q(play_status__exact="VE") | Q(play_status__exact="PU"))
+            results = results.filter(Q(play_status__exact="VE") | Q(play_status__exact="PU"))
+        print "filtered!", len(results)
         return results
     
     def get_condition(self, uid=None, dbobject=None):
@@ -211,7 +213,7 @@ class DBInterface(object):
         dbloc = dbobject or models.DBLocation.objects.get(id=uid)
         loc = Location(dbloc.name, dbloc.id).set_description(dbloc.desc).add_ftdesc(dbloc.ftdesc)
         
-        for dbevent in self.filter_by_play_status(models.DBEvent.objects.filter(featureowner__id=dbloc.id)):
+        for dbevent in self.filter_by_play_status(models.DBEvent.objects.filter(eventowner__id=dbloc.id)):
             loc.add_event(self.get_event(dbobject=dbevent))
         
         dbconns = models.Connection.objects.filter(Q(locfrom__id=dbloc.id) | Q(locto__id=dbloc.id))
@@ -225,8 +227,9 @@ class DBInterface(object):
                 loc.add_connection(dbconnection.locto.name, dbconnection.locto.id)
             else:
                 loc.add_connection(dbconnection.locfrom.name, dbconnection.locfrom.id)
-                
-        for dbfeature in self.filter_by_play_status(models.DBFeature.objects.filter(featureowner__id=dbloc.id)):
+        
+        print "filtering features!"
+        for dbfeature in self.filter_by_play_status(models.DBFeature.objects.filter(location__id=dbloc.id)):
             loc.add_feature(self.get_feature(dbobject=dbfeature))
             
         return loc
@@ -261,6 +264,7 @@ class Game(object):
     
     def examine(self, command):
         target = command.lower()[8:]
+        print self.current_location.features
         if target.lower() in self.current_location.features:
             self.current_location.features[target].trigger(self)
         else:

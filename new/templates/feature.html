@@ -30,6 +30,11 @@
             {% csrf_token %}
             <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ feature.adminname }}" autocomplete="off"/><span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span></p>
             <p>Feature name:<input class="module line" type="text" name="name" value="{{ feature.name }}" autocomplete="off"/><span class="element_helptext" style="display: none">The name of the feature shown in game. Should be a simple noun.</span></p>
+            <p>Location to attach to:
+                <input id="attachname" class="module line" type="text" name="modulename" readonly="readonly" value="{{ feature.location.name }}"/>
+                <input id="attachid" class="module line" type="hidden" name="moduleid" readonly="readonly" value="{{ feature.location.id }}"/>
+                {% if user_can_edit_module %}<input class="createbutton" type="button" id="feature_attach" value="Select"/>{% endif %}
+            </p>
             <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ feature.desc }}</textarea><span class="element_helptext" style="display: none">Description: Description when examining the feature.</span></p>
             <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if feature.name %}{{ feature.notes }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
             {% if feature.id == 0 or user_can_edit_module %}

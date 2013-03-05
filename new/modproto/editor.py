@@ -13,7 +13,7 @@ from django.template import RequestContext
 from views import createTemplateData
 from utilities import wrapTags, wrapTagsWithInnerData, get_empty_names
 from django.contrib.auth.decorators import login_required
-from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfile, DBGame, Connection
+from proto.models import DBLocation, DBCondition, DBEvent, DBFeature, UserProfile, DBGame, Connection, DBGameModule
 
 from django.shortcuts import render_to_response, redirect
 
@@ -25,8 +25,8 @@ MODULE_FIELDS = {
     },
     "feature" : {
         "class" : DBFeature,
-        "fieldnames" : (("adminname", "editorname"), "name", "desc", "notes"), 
-        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("Description", "desc"))        
+        "fieldnames" : (("adminname", "editorname"), "moduleid", "name", "desc", "notes"), 
+        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("Description", "desc"), ("Location to attach", "moduleid"))        
     }   
 }
 
@@ -42,11 +42,12 @@ class NullModule(object):
         self.id = 0
         self.adminname = (fields["adminname"]) if fields else ""
         self.notes = (fields["notes"]) if fields else ""
+        self.module = (DBLocation.objects.get(id=int(fields["moduleid"]))) if fields and fields["moduleid"] and DBGameModule.objects.filter(id=int(fields["moduleid"])) else {"name" : "", "id" : ""}
 
-def editor_error(request, template, message):
+def editor_error(request, moduletype, message):
     """ Display editor error. """
-    messages.error(message)
-    return render_to_response(template, createTemplateData({"location": NullModule(), "user_can_edit_module" : False}), context_instance=RequestContext(request))
+    messages.error(request, message)
+    return render_to_response(moduletype + ".html", createTemplateData({moduletype: NullModule(), "user_can_edit_module" : False}), context_instance=RequestContext(request))
 
 def get_fields_from_request(request, fieldnames=tuple(), mandatoryfields=tuple()):
     fields = {}
@@ -79,9 +80,9 @@ def module_save(request, cls, fieldnames, mandatoryfields, moduleid=None):
                 messages.error(request, savemsg)
                 return render_to_response(cls.get_simple_name() + ".html", createTemplateData({cls.get_simple_name(): NullModule(fields), "user_can_edit_module" : False}), context_instance=RequestContext(request)) 
         else:
-            return editor_error(request, cls.get_simple_name() + ".html", "Error: User account disabled.")
+            return editor_error(request, cls.get_simple_name(), "Error: User account disabled.")
     else:
-        return editor_error(request, cls.get_simple_name() + ".html", message)
+        return editor_error(request, cls.get_simple_name(), message)
 
 @login_required
 def module_delete(request, cls, moduleid):
@@ -153,14 +154,14 @@ def module(request, moduletype, moduleid=None):
         
     if moduleid:
         if moduleid.isdigit() and MODULE_FIELDS[moduletype]["class"].objects.filter(id=int(moduleid)).exists():
-            oldmodule = MODULE_FIELDS[moduletype]["class"].objects.filter(id=int(moduleid))[0]
+            oldmodule = MODULE_FIELDS[moduletype]["class"].objects.get(id=int(moduleid))
             if oldmodule.is_editable(request.user):
                 return render_to_response(moduletype + ".html", createTemplateData({moduletype: oldmodule, "user_can_edit_module" : True}), context_instance=RequestContext(request))
             else:
                 return render_to_response(moduletype + ".html", createTemplateData({moduletype: oldmodule, "user_can_edit_module" : False}), context_instance=RequestContext(request))
         else:
             messages.error(request, ("Error: No such %s" % (moduletype.capitalize())))
-    return render_to_response(moduletype + ".html", createTemplateData({moduletype: NullModule()}), context_instance=RequestContext(request))
+    return render_to_response(moduletype + ".html", createTemplateData({moduletype: NullModule(), "user_can_edit_module" : True}), context_instance=RequestContext(request))
 
 @login_required  
 def location(request, locationid=None): return module(request, "location", locationid)

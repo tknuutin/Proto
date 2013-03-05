@@ -147,15 +147,41 @@ class EventTriggered(models.Model):
     event = models.ForeignKey(DBEvent)
     
 class DBFeature(DBGameModule):
-    module = models.ForeignKey(DBGameModule, related_name="featureowner")
+    location = models.ForeignKey("DBLocation", related_name="features")
     name = models.CharField(max_length=512)
     desc = models.TextField()
     
+    @classmethod
+    def get_simple_name(cls): return "feature"
+    
+    @classmethod
+    def save_from_request(cls, request, fields, moduleid=None):
+        if DBLocation.objects.filter(id=fields["moduleid"]).exists():
+            fields["location"] = DBLocation.objects.get(id=fields["moduleid"])
+            del fields["moduleid"]
+            
+            if not cls.objects.filter(name=fields["name"], location=fields["location"]).exists() and not moduleid:
+                newfeature = cls(**fields)
+                newfeature.save()
+                return True, "Succesfully created new Feature.", newfeature.id
+            else:
+                oldfeature = cls.objects.get(id=moduleid)
+                if oldfeature.is_editable(request.user) and not cls.objects.filter(name=fields["name"], location=fields["location"]).exclude(id=moduleid).exists():
+                    for field, value in fields.iteritems():
+                        setattr(oldfeature, field, value)
+                    
+                    oldfeature.save()
+                    return True, "Succesfully saved changes to Feature.", oldfeature.id
+                else:
+                    return False, "Feature with that name already exists for the specified module.", moduleid
+        else:
+            return False, "Attaching Module ID not found.", None
+    
     def __unicode__(self):
-        return self.module.adminname + ": " + self.name
+        return self.location.adminname + ": " + self.name
     
 class Alternative(DBGameModule):
-    module = models.ForeignKey(DBGameModule, related_name="altowner")
+    module = models.ForeignKey(DBGameModule, related_name="alternatives")
     altname = models.CharField(max_length=512)
     
 class DBLocation(DBGameModule):
@@ -182,7 +208,6 @@ class DBLocation(DBGameModule):
             oldloc = cls.objects.get(id=moduleid)
             if oldloc.is_editable(request.user) and not cls.objects.filter(name=fields["name"], game=fields["game"]).exclude(id=moduleid).exists():
                 for field, value in fields.iteritems():
-                    print "setting field %s of %s to %s" % (field, oldloc.name, value)
                     setattr(oldloc, field, value)
                     
                 conn_save_success, msg = Connection.save_from_request(request, oldloc)
