@@ -20,8 +20,8 @@ from django.shortcuts import render_to_response, redirect
 MODULE_FIELDS = {
     "location" : {
         "class" : DBLocation,
-        "fieldnames" : (("adminname", "editorname"), "name", "desc", "notes"), 
-        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("Description", "desc"))
+        "fieldnames" : (("adminname", "editorname"), "name", "ftdesc", "desc", "notes"), 
+        "mandatoryfields" : (("Editor name", "adminname"), ("Name", "name"), ("First time description", "ftdesc"), ("Description", "desc"))
     },
     "feature" : {
         "class" : DBFeature,
@@ -61,8 +61,8 @@ def get_fields_from_request(request, fieldnames=tuple(), mandatoryfields=tuple()
             return False, fields, "Please input valid values to the field: " + mandatoryname
         
     fields["creator"] = request.user
+    #TODO: add other game support
     fields["game"] = DBGame.objects.get(name="default")
-    print fields
     return True, fields, "Fields okay."
 
 @login_required
