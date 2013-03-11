@@ -9,21 +9,21 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 
 EDIT_STATUS_CHOICES = (
-                              ("AL", "Editable"),
-                              ("OW", "Owner only"),
-                              ("NO", "Superuser only"),
-                              ("PR", "Processing"),
-                              ("RM", "Removed")
-                        )
+          ("AL", "Editable"),
+          ("OW", "Owner only"),
+          ("NO", "Superuser only"),
+          ("PR", "Processing"),
+          ("RM", "Removed")
+    )
 
 PLAY_STATUS_CHOICES = (
-                              ("VE", "Verified"),
-                              ("PU", "Published"),
-                              ("UN", "Unpublished"),
-                              ("HO", "On hold"),
-                              ("PR", "Processing"),
-                              ("RM", "Removed")
-                        )
+          ("VE", "Verified"),
+          ("PU", "Published"),
+          ("UN", "Unpublished"),
+          ("HO", "On hold"),
+          ("PR", "Processing"),
+          ("RM", "Removed")
+    )
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)

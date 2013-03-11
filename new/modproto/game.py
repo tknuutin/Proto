@@ -7,6 +7,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from proto import models
 
+def natural_language_join(strings, separator="or"):
+    """ Joins a list of strings together separating them by a word if needed. Default separator is 'or'. """
+    if len(strings) == 1:
+        returnable = strings[0]
+    elif len(strings) > 1:
+        returnable = "%s or %s." % (", ".join(strings[:(len(strings)-1)]), strings[-1])
+    return returnable
+
 class Condition(object):
     """ Game condition, basically an if-clause in the game script. """
     LARGER = 0
@@ -153,6 +161,15 @@ class Location(Feature):
     def add_feature(self, feature):
         self.features[feature.name.lower()] = feature
         return self
+    
+    def examine_room(self, game):
+        """ Lists all the features and monsters and connections in the location. """
+        #TODO: add monsters and connections
+        featurenames = [feature.upper() for feature in self.features.iterkeys()]
+        if len(featurenames) > 0:
+            game.send_text("There is a %s here." % (natural_language_join(featurenames)))
+        else:
+            game.send_text("There seems to be absolutely nothing here.")
         
     def trigger_location(self, game):
         """ Trigger location, for example when entering the area or loading game to area. """
@@ -166,10 +183,7 @@ class Location(Feature):
             self.trigger(game, show_description=False)
         
         connectionnames = [connection.upper() for connection in self.connections.iterkeys()]
-        if len(connectionnames) == 1:
-            game.send_text("You can go to %s." % (connectionnames[0]))
-        elif len(connectionnames) > 1:
-            game.send_text("You can go to %s or %s." % (", ".join(connectionnames[:(len(connectionnames)-1)]), connectionnames[-1]))
+        game.send_text("You can go to %s." % (natural_language_join(connectionnames)))
 
 class DBInterface(object):
     """ Database interface controller. """
@@ -264,8 +278,9 @@ class Game(object):
     
     def examine(self, command):
         target = command.lower()[8:]
-        print self.current_location.features
-        if target.lower() in self.current_location.features:
+        if target.strip().lower() == "room":
+            self.current_location.examine_room(self)
+        elif target.lower() in self.current_location.features:
             self.current_location.features[target].trigger(self)
         else:
             self.send_text("It is barely worth mentioning, so I won't waste anyone's time by describing it.")
