@@ -21,7 +21,11 @@
             <h2 class="dbtitle">Locations</h2>
             {% if locations %}
             <table id="locations">
-                <th>Name</th><th>Date created</th><th>Status</th><th>Creator</th><th></th>
+                <th><span class="tableheader">Name</span></th>
+                <th><span class="tableheader">Date created</span></th>
+                <th><span class="tableheader">Status</span></th>
+                <th><span class="tableheader">Creator</span></th>
+                <th><span class="tableheader"></th>
                 {% for loc in locations %}
                 <tr data-rownum="{{ forloop.counter }}">
                     <td>{{ loc.getUnicode }}</td>
@@ -40,7 +44,10 @@
             <h2 class="dbtitle">Features</h2>
             {% if features %}
             <table id="features">
-                <th>Feature</th><th>Date created</th><th>Status</th><th></th>
+                <th><span class="tableheader">Feature</span></th>
+                <th><span class="tableheader">Date created</span></th>
+                <th><span class="tableheader">Status</span></th>
+                <th></th>
                 {% for feature in features %}
                 <tr data-rownum="{{ forloop.counter }}">
                     <td>{{ feature.getUnicode }}</td>
