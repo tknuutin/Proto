@@ -242,7 +242,6 @@ class DBInterface(object):
             else:
                 loc.add_connection(dbconnection.locfrom.name, dbconnection.locfrom.id)
         
-        print "filtering features!"
         for dbfeature in self.filter_by_play_status(models.DBFeature.objects.filter(location__id=dbloc.id)):
             loc.add_feature(self.get_feature(dbobject=dbfeature))
             

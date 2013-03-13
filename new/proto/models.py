@@ -134,7 +134,7 @@ class DBEvent(DBGameModule):
     failevent = models.ForeignKey("DBEvent", null=True, blank=True, related_name="failowner")
     
     def __unicode__(self):
-        return self.adminname + " (has condition)" if self.condition else "(no condition)"
+        return self.adminname + " (has condition)" if self.condition else " (no condition)"
     
 class DBSession(models.Model):
     started = models.DateTimeField(auto_now=True)
