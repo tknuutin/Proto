@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/common.css" />
+    <link rel="stylesheet" type="text/css" href="/static/editor_module.css" />
+    <link rel="stylesheet" href="/static/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+{% endblock %}
+{% block navigation %}
+    <li id="nav_game"><a href="/proto/">Back to game</a></li>
+    <li id="nav_editor" class="selected"><a href="/proto/editor/">Editor main</a></li>
+    <li id="nav_tutorials"><a>Tutorials</a></li>
+{% endblock %}
+{% block content %}
+    <div id="container">
+        <div class="moduleinfo">
+        {% if messages %}
+            {% for message in messages %}
+                <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <div class="helpboxcontainer">
+            <div class="helpbox"><p>Help text goes here!</p></div>
+            <a class="hidehelpbutton" href="">Toggle help</a>
+        </div>
+        {% block moduleoptions %}
+        {% endblock %}
+    </div>
+    <div id="hiddenelements" style="display: none;">
+    {% block hiddenelements %}
+    {% endblock %}
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/static/common.js"></script>
+<script type="text/javascript" src="/static/editor_main.js"></script>
+{% block modulescripts %}
+{% endblock %}
+{% endblock %}

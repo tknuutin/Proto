@@ -1,38 +1,33 @@
-{% extends "base.html" %}
-{% block styles %}
-<link rel="stylesheet" type="text/css" href="/static/common.css" />
-<link rel="stylesheet" type="text/css" href="/static/editor_module.css" />
-<link rel="stylesheet" href="/static/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
-{% endblock %}
-{% block navigation %}
-    <li id="nav_game"><a href="/proto/">Back to game</a></li>
-    <li id="nav_editor" class="selected"><a href="/proto/editor/">Editor main</a></li>
-    <li id="nav_tutorials"><a>Tutorials</a></li>
-{% endblock %}
-{% block content %}
-    <div id="container">
-        <div class="moduleinfo">
-        {% if messages %}
-            {% for message in messages %}
-                <p{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        <div class="helpbox"><p>Help text goes here!</p></div>
-        {% if location.id == 0 %}
-            <p>Create a new game Location.</p>
-        {% else %}
-            <p>ID: <span id="moduleid">{{ location.id }}</span></p>
-            <p>Status: {{ location.get_play_status }}</p>
-            <p>Owner: {{ location.creator.username }}</p>
-        {% endif %}
-        
-        <form id="mainform" action="{{ request.path }}" method="post">
-            {% csrf_token %}
-            <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/><span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span></p>
-            <p>Location name:<input class="module line" type="text" name="name" value="{{ location.name }}" autocomplete="off"/><span class="element_helptext" style="display: none">Location name: A short unique name for the location. It will be visible to the player. Something like "Bob's bathroom" or whatever.</span></p>
-            <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea><span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span></p>
-            <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea><span class="element_helptext" style="display: none">Default description: Description when entering the location.</span></p>
-            {% if location.id != 0 %}
+{% extends "module.html" %}
+{% block moduleoptions %}
+    {% if location.id == 0 %}
+        <p>Create a new game Location.</p>
+    {% else %}
+        <p>ID: <span id="moduleid">{{ location.id }}</span></p>
+        <p>Status: {{ location.get_play_status }}</p>
+        <p>Owner: {{ location.creator.username }}</p>
+    {% endif %}
+    
+    <form id="mainform" action="{{ request.path }}" method="post">
+        {% csrf_token %}
+        <div class="helpsubject">
+            <p>Editor name:<input class="module line" type="text" name="editorname" value="{{ location.adminname }}" autocomplete="off"/></p>
+            <span class="element_helptext"style="display: none">Editor name: Only visible in the editor. It should be a name that helps you distinguish it from other modules. Basically it don't matter too much so dont sweat it.</span>
+        </div>
+        <div class="helpsubject">
+            <p>Location name:<input class="module line" type="text" name="name" value="{{ location.name }}" autocomplete="off"/></p>
+            <span class="element_helptext" style="display: none">Location name: A short unique name for the location. It will be visible to the player. Something like "Bob's bathroom" or whatever.</span>
+        </div>
+        <div class="helpsubject">
+            <p>First time visit description:<textarea class="module line" type="text" name="ftdesc" rows="5" cols="80">{% if location.ftdesc %}{{ location.ftdesc }}{% endif %}</textarea></p>
+            <span class="element_helptext" style="display: none">First time description: The description shown to the player the first time he enters the location. Optional, if we dont have this we'll just use the default description.</span>
+        </div>
+        <div class="helpsubject">
+            <p>Default description:<textarea class="module text" type="text" name="desc" rows="5" cols="80">{{ location.desc }}</textarea></p>
+            <span class="element_helptext" style="display: none">Default description: Description when entering the location.</span>
+        </div>
+        {% if location.id != 0 %}
+            <div class="helpsubject">
                 <p>
                     <table id="connections" {% if not location.locationto.all and not location.locationfrom.all %}style="display:none;"{% endif %}>
                         <th>Connecting location</th><th>Creator</th><th>Status</th><th></th>
@@ -47,7 +42,7 @@
                         {% for conn in location.locationto.all %}
                         <tr class="connection" data-id="{{ conn.id }}" data-rownum="{{ forloop.counter }}">
                             <td data-id="{{ conn.locfrom.id }}">{{ conn.locfrom.name }}</td>
-                            <td class="connection_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
+                            <td class="conne6ction_owner" data-owner-id="{{ conn.locfrom.creator.id }}">{{ conn.locfrom.creator.username }}</td>
                             <td>{{ conn.locfrom.get_play_status }}</td>
                             <td></td>
                         </tr>
@@ -56,43 +51,48 @@
                     <div class="d_element_empty" {% if location.locationto.all or location.locationfrom.all %}style="display:none;"{% endif %}><p class="info">No Connections for this Location yet.</p></div>
                     {% if user_can_edit_module %}<input type="button" class="createbutton" name="createconnection" id="connection_create" value="Create a new Connection"/>{% endif %}
                 </p>
+                <span class="element_helptext" style="display:none;">Connections: Passages to the other Locations. Player can use these to switch locations by typing 'go to location'.</span>
+            </div>
+            <div class="helpsubject">
                 <p>List of features here.</p>
-            {% else %}
-                <p>Save the Location to add features and connections.</p>
-            {% endif %}
-            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.notes }}{% endif %}</textarea><span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span></p>
-            {% if location.id == 0 or user_can_edit_module %}
-                <p>
-                    <input class="save" type="submit" name="save" value="Save"/>
-                    {% if location.id != 0 %}
-                        {% if location.creator.id == user.id or user.is_superuser %} 
-                            {% if location.play_status == "UN" %} 
-                                <input class="publish" type="submit" name="publish" value="Publish"/>
-                            {% else %}
-                                <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
-                            {% endif %}
-                            <input class="delete" type="submit" name="delete" value="Delete"/>
+                <span class="element_helptext" style="display:none;">Features: Objects or whatever in the Location that can be examined.</span>
+            </div>
+        {% else %}
+            <p>Save the Location to add features and connections.</p>
+        {% endif %}
+        </div>
+        <div class="helpsubject">
+            <p>Notes:<textarea class="module text" type="text" name="notes" rows="5" cols="50">{% if location.name %}{{ location.notes }}{% endif %}</textarea></p>
+            <span class="element_helptext" style="display: none">Notes: Any notes you wish to write down for whatever reason. Not visible to the player.</span>
+        </div>
+        {% if location.id == 0 or user_can_edit_module %}
+            <p>
+                <input class="save" type="submit" name="save" value="Save"/>
+                {% if location.id != 0 %}
+                    {% if location.creator.id == user.id or user.is_superuser %} 
+                        {% if location.play_status == "UN" %} 
+                            <input class="publish" type="submit" name="publish" value="Publish"/>
+                        {% else %}
+                            <input class="unpublish" type="submit" name="unpublish" value="Unpublish"/>
                         {% endif %}
+                        <input class="delete" type="submit" name="delete" value="Delete"/>
                     {% endif %}
-                </p>
-            {% endif %}
-        </form>
-    </div>
-    <div id="hiddenelements" style="display: none;">
-        <table>
-            <tr class="connection">
-                <td class="locationname"></td>
-                <td class="connection_owner"></td>
-                <td class="locationstatus"></td>
-                <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
-            </tr>
-        </table>
-    </div>
+                {% endif %}
+            </p>
+        {% endif %}
+    </form>
+</div>
 {% endblock %}
-{% block scripts %}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="/static/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript" src="/static/common.js"></script>
-<script type="text/javascript" src="/static/editor_main.js"></script>
+{% block hiddenelements %}
+    <table>
+        <tr class="connection">
+            <td class="locationname"></td>
+            <td class="connection_owner"></td>
+            <td class="locationstatus"></td>
+            <td><input type="button" class="removebutton" name="removeconnection" value="Delete"/></td>
+        </tr>
+    </table>
+{% endblock %}
+{% block modulescripts %}
 <script type="text/javascript" src="/static/location.js"></script>
 {% endblock %}

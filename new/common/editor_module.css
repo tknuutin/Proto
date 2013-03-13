@@ -32,14 +32,20 @@ input[type="text"]{
 textarea{
     display:block;
 }
-.helpbox{
+.helpboxcontainer{
     float:right;
     max-width:300px;
     margin-right:35px;
+}
+.helpbox{
     background-color:rgb(236, 236, 236);
     border-radius:8px;
     padding:5px;
     font-size:0.8em;
+}
+.hidehelpbutton{
+    font-size:0.8em;
+    float:right;
 }
 
 table, td{
